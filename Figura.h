@@ -1,6 +1,21 @@
 #ifndef FIGURA_H
 #define FIGURA_H
 
+const int MAX_MIDA_FIGURA = 4;
+const int NUM_DE_FIGURES = 7;
+const int BLOCS_PER_FIGURA = 4;
+
+const bool ESTAT_INICIAL_FIGURES[NUM_DE_FIGURES][BLOCS_PER_FIGURA] =
+{
+	{1, 1, 1, 1}, // Figura O
+	{0, 0, 0, 0}, // Figura I
+	{0, 1, 0, 1}, // Figura T
+	{0, 0, 1, 1}, // Figura L
+	{1, 0, 0, 1}, // Figura J
+	{1, 1, 0, 0}, // Figura Z
+	{0, 1, 1, 1}  // Figura S
+};
+
 typedef enum
 {
 	FIGURA_O = 0,
@@ -30,8 +45,8 @@ class Figura
 {
 public:
 	// Constructors & Destructors
-	Figura() { m_forma = NO_FIGURA; m_color = NO_COLOR, m_formaGir = 0; };
-	Figura(TipusFigura forma, ColorFigura color) { m_forma = forma; m_color = color, m_formaGir = 0; };
+	Figura();
+	Figura(TipusFigura forma, ColorFigura color);
 
 	~Figura() {};
 
@@ -52,6 +67,8 @@ public:
 private:
 	TipusFigura m_forma;
 	ColorFigura m_color;
+	bool m_matriu[MAX_MIDA_FIGURA][MAX_MIDA_FIGURA];
+	int m_mida;
 	int m_formaGir;
 };
 
