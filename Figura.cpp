@@ -1,6 +1,8 @@
 #include <iostream>
 #include "Figura.h"
 
+using namespace std;
+
 Figura::Figura()
 {
 	m_forma = NO_FIGURA;
@@ -34,6 +36,8 @@ Figura::Figura(TipusFigura forma, ColorFigura color)
 
 	switch (forma)
 	{
+	case FIGURA_I:
+		break;
 	case FIGURA_O:
 		m_mida = 2;
 		break;
@@ -48,7 +52,7 @@ Figura::Figura(TipusFigura forma, ColorFigura color)
 
 	default:
 		// Mensaje de error
-		std::cout << "Error en Constructor con Parámetros de la clase Figura. Se ha introducido una figura inválida." << std::endl;
+		cout << "Error en Constructor con Parámetros de la clase Figura. Se ha introducido una figura inválida." << endl;
 		break;
 	}
 
@@ -77,3 +81,18 @@ Figura::Figura(TipusFigura forma, ColorFigura color)
 		}
 	}
 };
+
+void Figura::mostraFigura()
+{
+	for (int i = 0; i < m_mida; i++)
+	{
+		for (int j = 0; j < m_mida; j++)
+		{
+			if (m_matriu[i][j])
+				cout << m_color << " ";
+			else
+				cout << "0 ";
+		}
+		cout << endl;
+	}
+}

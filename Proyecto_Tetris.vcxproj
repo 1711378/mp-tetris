@@ -20,10 +20,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Figura.cpp" />
+    <ClCompile Include="Joc.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Tauler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Figura.h" />
+    <ClInclude Include="Joc.h" />
+    <ClInclude Include="Tauler.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

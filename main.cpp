@@ -8,5 +8,11 @@ int main() {
 
 	cout << "Hola";
 
+	cout << endl << endl;
+
+	Figura prueba(FIGURA_T, COLOR_GROC);
+
+	prueba.mostraFigura();
+
 	return 0;
 }

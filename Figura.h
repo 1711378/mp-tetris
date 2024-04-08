@@ -64,6 +64,8 @@ public:
 	ColorFigura getColor() { return m_color; };
 	int getFormaGir() { return m_formaGir; };
 
+	void mostraFigura();
+
 private:
 	TipusFigura m_forma;
 	ColorFigura m_color;
