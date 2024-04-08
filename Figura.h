@@ -60,11 +60,11 @@ public:
 
 	// Consulting Methods
 		// Getters
-	TipusFigura getForma() { return m_forma; };
-	ColorFigura getColor() { return m_color; };
-	int getFormaGir() { return m_formaGir; };
+	TipusFigura getForma() const { return m_forma; };
+	ColorFigura getColor() const { return m_color; };
+	int getFormaGir() const { return m_formaGir; };
 
-	void mostraFigura();
+	void mostraFigura() const;
 
 private:
 	TipusFigura m_forma;

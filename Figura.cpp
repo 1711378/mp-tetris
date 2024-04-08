@@ -26,6 +26,7 @@ Figura::Figura(TipusFigura forma, ColorFigura color)
 	m_formaGir = 0;
 	m_mida = 4; // Inicializamos por defecto al valor más grande. Lo cambiaremos luego dependiendo de la forma
 
+	// Inicializamos toda la matriz a 0
 	for (int i = 0; i < MAX_MIDA_FIGURA; i++)
 	{
 		for (int j = 0; j < MAX_MIDA_FIGURA; j++)
@@ -34,6 +35,7 @@ Figura::Figura(TipusFigura forma, ColorFigura color)
 		}
 	}
 
+	// Asignamos la medida de la matriz dependiendo de la forma
 	switch (forma)
 	{
 	case FIGURA_I:
@@ -56,33 +58,34 @@ Figura::Figura(TipusFigura forma, ColorFigura color)
 		break;
 	}
 
-	int counter = 0;
-	int positionOnArray = 0;
+	// Ponemos los cuatro bloques de la figura dependiendo de su forma
+	int blocksPlaced = 0;
+	int positionOnInitialArray = 0;
 
 	for (int i = 0; i < m_mida; i++)
 	{
 		for (int j = 0; j < m_mida; j++)
 		{
-			if ((ESTAT_INICIAL_FIGURES[forma][positionOnArray] && counter < BLOCS_PER_FIGURA))
+			if ((ESTAT_INICIAL_FIGURES[forma][positionOnInitialArray] && blocksPlaced < BLOCS_PER_FIGURA))
 			{
 				m_matriu[i][j] = 1;
-				counter++;
+				blocksPlaced++;
 			}
-			else if (!(positionOnArray < BLOCS_PER_FIGURA) && counter < BLOCS_PER_FIGURA)
+			else if (!(positionOnInitialArray < BLOCS_PER_FIGURA) && blocksPlaced < BLOCS_PER_FIGURA)
 			{
 				m_matriu[i][j] = 1;
-				counter++;
+				blocksPlaced++;
 			}
 
-			if (positionOnArray < BLOCS_PER_FIGURA)
+			if (positionOnInitialArray < BLOCS_PER_FIGURA)
 			{
-				positionOnArray++;
+				positionOnInitialArray++;
 			}
 		}
 	}
 };
 
-void Figura::mostraFigura()
+void Figura::mostraFigura() const
 {
 	for (int i = 0; i < m_mida; i++)
 	{
