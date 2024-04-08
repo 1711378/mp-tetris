@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2024
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34701.34
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Punt", "Punt.vcxproj", "{08223D03-DBF5-445C-B6A4-10F40EAB36F8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Proyecto_Tetris", "Proyecto_Tetris.vcxproj", "{08223D03-DBF5-445C-B6A4-10F40EAB36F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +26,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {297C95B1-400F-445A-AE55-921DCA992D2E}
+		SolutionGuid = {76356935-E22B-4D1F-887B-ABAACFA26D2E}
 	EndGlobalSection
 EndGlobal
