@@ -6,13 +6,14 @@
 class Joc {
 public:
 	Joc();
-	void inicialitza();
-	void giraFigura();
-	void mouFigura();
-	void baixaFigura();
-	void escriuTauler();
+	void inicialitza(const string& nomFitxer);
+	bool giraFigura(DireccioGir direccio);
+	bool mouFigura(int dirX);
+	int baixaFigura();
+	void escriuTauler(const string& nomFitxer);
 private:
 	Figura m_figuraActual;
+	Tauler m_tauler;
 };
 
 #endif
