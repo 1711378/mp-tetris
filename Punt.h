@@ -17,6 +17,7 @@ public:
 	void setY(int y) { m_y = y; };
 	void incX() { m_x++; };
 	void incY() { m_y++; };
+	void decX() { m_x--; };
 	void decY() { m_y--; };
 private:
 	int m_x;

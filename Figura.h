@@ -61,6 +61,10 @@ public:
 	void setForma(TipusFigura forma) { m_forma = forma; };
 	void setColor(ColorFigura color) { m_color = color; };
 	void setFormaGir(int formaGir) { m_formaGir = formaGir; };
+	void incCentreX() { m_centre.incX();  };
+	void incCentreY() { m_centre.incY(); };
+	void decCentreX() { m_centre.decX(); };
+	void decCentreY() { m_centre.decY(); };
 
 	// Consulting Methods
 	void mostraFigura() const;
@@ -69,7 +73,7 @@ public:
 	ColorFigura getColor() const { return m_color; };
 	int getFormaGir() const { return m_formaGir; };
 	int getMida() const { return m_mida; };
-	int getMatriuOnIndex(int fila, int columna) const { return m_matriu[fila][columna]; };
+	bool getMatriuOnIndex(int fila, int columna) const { return m_matriu[fila][columna]; };
 	int getCentreX() { return m_centre.getX(); };
 	int getCentreY() { return m_centre.getY(); };
 

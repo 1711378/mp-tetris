@@ -61,6 +61,7 @@ void Figura::matriuTrasposta()
 
 void Figura::inicialitzaMatriuFigura(TipusFigura forma)
 {
+	m_forma = forma;
 	m_mida = 4; // Inicializamos por defecto al valor más grande. Lo cambiaremos luego dependiendo de la forma
 
 	// Inicializamos toda la matriz a 0

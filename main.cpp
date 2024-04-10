@@ -42,11 +42,12 @@ int main() {
 	taulerPrueba.mostraTauler();
 	cout << endl;
 
-	Joc prueba(FIGURA_J);
+	Joc prueba(FIGURA_I);
+	prueba.giraFigura(GIR_HORARI);
 
 	prueba.escriuTauler();
 	cout << endl;
-	cout << "Mov posible: " << prueba.canMove(MOV_VERTICAL, NO_GIR, NO_DIR);
+	cout << "Mov posible: " << prueba.canMove(MOV_HORIZONTAL, NO_GIR, MOV_DRE);
 	
 
 	return 0;
