@@ -1,7 +1,7 @@
 #include "joc.h"
 
 Joc::Joc(TipusFigura forma)
-{
+{		
 	m_tauler.setCursorX(4);
 	m_tauler.setCursorY(8);
 
@@ -18,14 +18,14 @@ bool Joc::movementCondition(int iConstantTerm, int jConstantTerm, int marginalVa
 			if (marginalVariable == stopCondition &&
 				m_figuraActual.getMatriuOnIndex(i, j) &&
 				m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i + iConstantTerm,
-					m_tauler.getCursorY() - m_figuraActual.getCentreY() + j + jConstantTerm))
+										m_tauler.getCursorY() - m_figuraActual.getCentreY() + j + jConstantTerm))
 			{
 				isMovPossible = false;
 			}
 			else if (m_figuraActual.getMatriuOnIndex(i, j) &&
 				!(m_figuraActual.getMatriuOnIndex(i + iConstantTerm, j + jConstantTerm)) &&
 				m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i + iConstantTerm,
-					m_tauler.getCursorY() - m_figuraActual.getCentreY() + j + jConstantTerm))
+										m_tauler.getCursorY() - m_figuraActual.getCentreY() + j + jConstantTerm))
 			{
 				isMovPossible = false;
 			}
@@ -140,8 +140,11 @@ bool Joc::giraFigura(DireccioGir direccio)
 
 	if (direccio == GIR_HORARI && m_figuraActual.getForma() != FIGURA_O)
 	{
+		// Girar la figura
 		m_figuraActual.matriuTrasposta();
 		m_figuraActual.matriuColumnesCanviades();
+
+		// Recalcular el centro de la Figura I
 		if (m_figuraActual.getForma() == FIGURA_I)
 		{
 			switch (m_figuraActual.getFormaGir())
@@ -169,8 +172,11 @@ bool Joc::giraFigura(DireccioGir direccio)
 	}
 	else if (direccio == GIR_ANTI_HORARI && m_figuraActual.getForma() != FIGURA_O)
 	{
+		// Girar la figura.
 		m_figuraActual.matriuColumnesCanviades();
 		m_figuraActual.matriuTrasposta();
+
+		// Recalcular el centro de la Figura I
 		if (m_figuraActual.getForma() == FIGURA_I)
 		{
 			switch (m_figuraActual.getFormaGir())
