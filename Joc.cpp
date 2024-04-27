@@ -372,13 +372,21 @@ void Joc::escriuTauler(const string& nomFitxer)
 
 	if (fitxer.is_open())
 	{
-		fitxer << m_figuraActual.getForma() << m_tauler.getCursorX() << m_tauler.getCursorY() << m_figuraActual.getFormaGir();
+		fitxer << m_figuraActual.getForma() << " " << m_tauler.getCursorX() << " " << m_tauler.getCursorY() << " " << m_figuraActual.getFormaGir() << endl;
 
 		for (int i = 0; i < N_FILES; i++)
 		{
 			for (int j = 0; j < N_COLUMNES; j++)
 			{
 				fitxer << m_tauler.getCellOnIndex(i, j);
+				if (j < N_COLUMNES - 1)
+				{
+					fitxer << " ";
+				}
+			}
+			if (i < N_FILES - 1)
+			{
+				fitxer << endl;
 			}
 		}
 

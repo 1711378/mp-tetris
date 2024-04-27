@@ -52,6 +52,7 @@ int main() {
 	cout << "Mov posible: " << prueba.baixaFigura();
 	cout << endl;
 	prueba.escriuTaulerConsola();
+	prueba.escriuTauler("prueba1.txt");
 	
 	return 0;
 }
