@@ -18,6 +18,7 @@ public:
 
 	void setCursorX(int x) { m_cursor.setX(x); };
 	void setCursorY(int y) { m_cursor.setY(y); };
+	void setCellOnIndex(int fila, int columna, ColorFigura num) { m_tauler[fila][columna] = num; }
 
 	void moveDownCursor() { m_cursor.incX(); };
 	void moveRightCursor() { m_cursor.incY(); };

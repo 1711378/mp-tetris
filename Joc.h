@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "Tauler.h"
+#include <fstream>
 
 using namespace std;
 
@@ -31,15 +32,15 @@ class Joc {
 public:
 	Joc(TipusFigura forma);
 
-	void saveGame(const string& nomFitxer);
+	void inicialitza(const string& nomFitxer);
 	bool giraFigura(DireccioGir direccio);
 	bool mouFigura(DireccioMov dirX);
 	int baixaFigura();
 
 	bool canMove(TipusDeMov mov, DireccioGir direccio, DireccioMov dirX);
 	bool movementCondition(int iConstantTerm, int jConstantTerm, int marginalVariable, int stopCondition);
-	void loadGame(const string& nomFitxer);
-	void escriuTauler();
+	void escriuTauler(const string& nomFitxer);
+	void escriuTaulerConsola();
 private:
 	Figura m_figuraActual;
 	Tauler m_tauler;

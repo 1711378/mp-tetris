@@ -168,4 +168,3 @@ void Figura::mostraFigura() const
 		cout << endl;
 	}
 }
-

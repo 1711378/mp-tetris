@@ -210,7 +210,54 @@ bool Joc::giraFigura(DireccioGir direccio)
 	return canSpin;
 }
 
-void Joc::escriuTauler()
+void Joc::escriuTaulerConsola()
 {
 	m_tauler.mostraTauler();
+}
+
+void Joc::inicialitza(const string& nomFitxer)
+{
+	ifstream fitxer;
+
+	fitxer.open(nomFitxer);
+
+	if (fitxer.is_open())
+	{
+		TipusFigura formaFigura;
+		Punt centre;
+		int x, y;
+		int formaGir;
+		int num;
+
+		fitxer >> formaFigura >> x >> y >> formaGir;
+
+		m_figuraActual.inicialitzaMatriuFigura(formaFigura);
+		m_tauler.setCursorX(x);
+		m_tauler.setCursorY(y);
+		m_figuraActual.setFormaGir(formaGir);
+		fitxer >> num;
+		while (!fitxer.eof())
+		{
+
+
+		}
+	}
+
+}
+
+void Joc::escriuTauler(const string& nomFitxer)
+{
+
+}
+
+
+ifstream& operator>>(ifstream& input, TipusFigura forma)
+{
+	TipusFigura valorForma;
+
+	input >> valorForma;
+
+	forma = valorForma;
+
+	return input;
 }

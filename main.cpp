@@ -45,7 +45,7 @@ int main() {
 	Joc prueba(FIGURA_I);
 	prueba.giraFigura(GIR_HORARI);
 
-	prueba.escriuTauler();
+	prueba.escriuTaulerConsola();
 	cout << endl;
 	cout << "Mov posible: " << prueba.canMove(MOV_HORIZONTAL, NO_GIR, MOV_DRE);
 	
