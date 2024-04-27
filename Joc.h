@@ -38,7 +38,7 @@ public:
 	int baixaFigura();
 
 	bool canMove(TipusDeMov mov, DireccioGir direccio, DireccioMov dirX);
-	bool movementCondition(int iConstantTerm, int jConstantTerm, int marginalVariable, int stopCondition);
+	bool linearMovementCondition(int i, int j, int iConstantTerm, int jConstantTerm, int marginalVariable, int stopCondition);
 	void escriuTauler(const string& nomFitxer);
 	void escriuTaulerConsola();
 private:

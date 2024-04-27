@@ -21,34 +21,37 @@ int main() {
 	figuraPrueba.mostraFigura();
 	cout << endl;
 
-	Tauler taulerPrueba;
+	Joc taulerPrueba(FIGURA_Z);
 	
 	cout << "Posicion inicial tablero: " << endl;
-	taulerPrueba.mostraTauler();
+	taulerPrueba.escriuTaulerConsola();
 	cout << endl;
 
 	cout << "Moviendo cursor hacia abajo: " << endl;
-	taulerPrueba.moveDownCursor();
-	taulerPrueba.mostraTauler();
+	taulerPrueba.baixaFigura();
+	taulerPrueba.escriuTaulerConsola();
 	cout << endl;
 
 	cout << "Moviendo cursor hacia los lados: " << endl;
-	taulerPrueba.moveLeftCursor();
-	taulerPrueba.mostraTauler();
+	taulerPrueba.mouFigura(MOV_ESQ);
+	taulerPrueba.escriuTaulerConsola();
 	cout << endl;
 
-	taulerPrueba.moveRightCursor();
-	taulerPrueba.moveRightCursor();
-	taulerPrueba.mostraTauler();
+	taulerPrueba.mouFigura(MOV_DRE);
+	taulerPrueba.mouFigura(MOV_DRE);
+	taulerPrueba.escriuTaulerConsola();
 	cout << endl;
 
 	Joc prueba(FIGURA_I);
 	prueba.giraFigura(GIR_HORARI);
 
+	cout << "Tablero de prueba movimiento: " << endl;
 	prueba.escriuTaulerConsola();
 	cout << endl;
-	cout << "Mov posible: " << prueba.canMove(MOV_HORIZONTAL, NO_GIR, MOV_DRE);
+	//cout << "Mov posible: " << prueba.mouFigura(MOV_ESQ);
+	cout << "Mov posible: " << prueba.baixaFigura();
+	cout << endl;
+	prueba.escriuTaulerConsola();
 	
-
 	return 0;
 }

@@ -2,137 +2,223 @@
 
 Joc::Joc(TipusFigura forma)
 {		
-	m_tauler.setCursorX(4);
-	m_tauler.setCursorY(8);
+	m_tauler.setCursorX(6);
+	m_tauler.setCursorY(5);
 
 	m_figuraActual.inicialitzaMatriuFigura(forma);
 }
 
-bool Joc::movementCondition(int iConstantTerm, int jConstantTerm, int marginalVariable, int stopCondition)
+bool Joc::linearMovementCondition(int i, int j, int iConstantTerm, int jConstantTerm, int marginalVariable, int stopCondition)
 {
-	bool isMovPossible = true;
-	for (int i = 0; i < m_figuraActual.getMida(); i++)
+	bool isColliding = false;
+	
+	if (marginalVariable == stopCondition &&
+		m_figuraActual.getMatriuOnIndex(i, j) &&
+		m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i + iConstantTerm,
+								m_tauler.getCursorY() - m_figuraActual.getCentreY() + j + jConstantTerm) &&
+		(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i + iConstantTerm) >= N_FILES &&
+		 m_tauler.getCursorY() - m_figuraActual.getCentreY() + j + jConstantTerm >= N_COLUMNES)
 	{
-		for (int j = 0; j < m_figuraActual.getMida(); j++)
+		isColliding = true;
+	}
+	else if (m_figuraActual.getMatriuOnIndex(i, j) &&
+			!(m_figuraActual.getMatriuOnIndex(i + iConstantTerm, j + jConstantTerm)) &&
+			m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i + iConstantTerm,
+									m_tauler.getCursorY() - m_figuraActual.getCentreY() + j + jConstantTerm))
+	{
+		isColliding = true;
+	}
+
+	return isColliding;
+}
+
+bool Joc::mouFigura(DireccioMov dirX)
+{
+	bool figureMoved = false, isColliding = false;
+	int i = 0, j = 0;
+
+	if (dirX == MOV_ESQ)
+	{
+		while (!isColliding && i < m_figuraActual.getMida())
 		{
-			if (marginalVariable == stopCondition &&
-				m_figuraActual.getMatriuOnIndex(i, j) &&
-				m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i + iConstantTerm,
-										m_tauler.getCursorY() - m_figuraActual.getCentreY() + j + jConstantTerm))
+			while (!isColliding && j < m_figuraActual.getMida())
 			{
-				isMovPossible = false;
+				if (j == 0 &&
+					m_figuraActual.getMatriuOnIndex(i, j) &&
+					m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i,
+											m_tauler.getCursorY() - m_figuraActual.getCentreY() + j - 1) ||
+					(m_tauler.getCursorY() - m_figuraActual.getCentreY() + j == 0 && m_figuraActual.getMatriuOnIndex(i, j)))
+				{
+					isColliding = true;
+				}
+				else if (m_figuraActual.getMatriuOnIndex(i, j) &&
+					!(m_figuraActual.getMatriuOnIndex(i, j - 1)) &&
+					m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i,
+											m_tauler.getCursorY() - m_figuraActual.getCentreY() + j - 1))
+				{
+					isColliding = true;
+				}
+				j++;
+			}
+			j = 0;
+			i++;
+		}
+
+		if (!isColliding)
+		{
+			figureMoved = true;
+			m_tauler.moveLeftCursor();
+		}
+	}
+	else if (dirX == MOV_DRE)
+	{
+		while (!isColliding && i < m_figuraActual.getMida())
+		{
+			while (!isColliding && j < m_figuraActual.getMida())
+			{
+				if (j == m_figuraActual.getMida() - 1 &&
+					m_figuraActual.getMatriuOnIndex(i, j) &&
+					m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i,
+											m_tauler.getCursorY() - m_figuraActual.getCentreY() + j + 1) ||
+					(m_tauler.getCursorY() - m_figuraActual.getCentreY() + j == N_COLUMNES - 1 && m_figuraActual.getMatriuOnIndex(i, j)))
+				{
+					isColliding = true;
+				}
+				else if (m_figuraActual.getMatriuOnIndex(i, j) &&
+					!(m_figuraActual.getMatriuOnIndex(i, j + 1)) &&
+					m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i,
+											m_tauler.getCursorY() - m_figuraActual.getCentreY() + j + 1))
+				{
+					isColliding = true;
+				}
+				j++;
+			}
+			j = 0;
+			i++;
+		}
+
+		if (!isColliding)
+		{
+			figureMoved = true;
+			m_tauler.moveRightCursor();
+		}
+	}
+
+	return figureMoved;
+}
+
+int Joc::baixaFigura()
+{
+	bool figureMoved = false, isColliding = false;
+	int i = 0, j = 0;
+
+	while (!isColliding && i < m_figuraActual.getMida())
+	{
+		while (!isColliding && j < m_figuraActual.getMida())
+		{
+			if (i == m_figuraActual.getMida() - 1 &&
+				m_figuraActual.getMatriuOnIndex(i, j) &&
+				m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i + 1,
+					m_tauler.getCursorY() - m_figuraActual.getCentreY() + j) ||
+				m_tauler.getCursorX() - m_figuraActual.getCentreX() + i == N_FILES - 1)
+			{
+				isColliding = true;
 			}
 			else if (m_figuraActual.getMatriuOnIndex(i, j) &&
-				!(m_figuraActual.getMatriuOnIndex(i + iConstantTerm, j + jConstantTerm)) &&
-				m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i + iConstantTerm,
-										m_tauler.getCursorY() - m_figuraActual.getCentreY() + j + jConstantTerm))
+				!(m_figuraActual.getMatriuOnIndex(i + 1, j)) &&
+				m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i + 1,
+					m_tauler.getCursorY() - m_figuraActual.getCentreY() + j))
 			{
-				isMovPossible = false;
+				isColliding = true;
 			}
+			j++;
 		}
+		j = 0;
+		i++;
 	}
 
-	return isMovPossible;
-}
-
-bool Joc::canMove(TipusDeMov mov, DireccioGir direccio, DireccioMov dirX) 
-{
-	bool isMovPossible = true;
-
-	switch (mov)
+	if (!isColliding)
 	{
-	case MOV_VERTICAL:
-		
-		for (int i = 0; i < m_figuraActual.getMida(); i++)
-		{
-			for (int j = 0; j < m_figuraActual.getMida(); j++)
-			{
-				if (i == m_figuraActual.getMida() - 1 &&
-					m_figuraActual.getMatriuOnIndex(i, j) &&
-					m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i + 1, 
-											m_tauler.getCursorY() - m_figuraActual.getCentreY() + j))
-				{
-					isMovPossible = false;
-				}
-				else if (m_figuraActual.getMatriuOnIndex(i, j) && 
-						!(m_figuraActual.getMatriuOnIndex(i + 1, j)) && 
-						m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i + 1, 
-												m_tauler.getCursorY() - m_figuraActual.getCentreY() + j))
-				{
-					isMovPossible = false;
-				}
-			}
-		}
-		break;
-
-	case MOV_HORIZONTAL:
-		if (dirX == MOV_ESQ)
-		{
-			for (int i = 0; i < m_figuraActual.getMida(); i++)
-			{
-				for (int j = 0; j < m_figuraActual.getMida(); j++)
-				{
-					if (j == 0 &&
-						m_figuraActual.getMatriuOnIndex(i, j) &&
-						m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i,
-												m_tauler.getCursorY() - m_figuraActual.getCentreY() + j - 1))
-					{
-						isMovPossible = false;
-					}
-					else if (m_figuraActual.getMatriuOnIndex(i, j) &&
-						!(m_figuraActual.getMatriuOnIndex(i, j - 1)) &&
-						m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i,
-												m_tauler.getCursorY() - m_figuraActual.getCentreY() + j - 1))
-					{
-						isMovPossible = false;
-					}
-				}
-			}
-		}
-		else if (dirX == MOV_DRE)
-		{
-			for (int i = 0; i < m_figuraActual.getMida(); i++)
-			{
-				for (int j = 0; j < m_figuraActual.getMida(); j++)
-				{
-					if (j == m_figuraActual.getMida() - 1 &&
-						m_figuraActual.getMatriuOnIndex(i, j) &&
-						m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i,
-												m_tauler.getCursorY() - m_figuraActual.getCentreY() + j + 1))
-					{
-						isMovPossible = false;
-					}
-					else if (m_figuraActual.getMatriuOnIndex(i, j) &&
-						!(m_figuraActual.getMatriuOnIndex(i, j + 1)) &&
-						m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i,
-												m_tauler.getCursorY() - m_figuraActual.getCentreY() + j + 1))
-					{
-						isMovPossible = false;
-					}
-				}
-			}
-		}
-		
-		break;
-
-	case MOV_GIRO:
-		if (direccio == GIR_HORARI)
-		{
-
-		}
-		else if (direccio == GIR_ANTI_HORARI)
-		{
-
-		}
-		break;
-
-	default:
-		cout << "Error. Tipo de movimiento invalido." << endl;
-		break;
+		figureMoved = true;
+		m_tauler.moveDownCursor();
 	}
 
-	return isMovPossible;
+	return figureMoved;
 }
+
+/*
+bool Joc::mouFigura(DireccioMov dirX)
+{
+	bool figureMoved = false, isColliding = false;
+	int i = 0, j = 0;
+
+	if (dirX == MOV_ESQ)
+	{
+		while (!isColliding && i < m_figuraActual.getMida())
+		{
+			while (!isColliding && j < m_figuraActual.getMida())
+			{
+				isColliding = linearMovementCondition(i, j, 0, -1, j, 0);
+				j++;
+			}
+			j = 0;
+			i++;
+		}
+
+		if (!isColliding)
+		{
+			figureMoved = true;
+			m_tauler.moveLeftCursor();
+		}
+	}
+	else if (dirX == MOV_DRE)
+	{
+		while (!isColliding && i < m_figuraActual.getMida())
+		{
+			while (!isColliding && j < m_figuraActual.getMida())
+			{
+				isColliding = linearMovementCondition(i, j, 0, 1, j, m_figuraActual.getMida() - 1);
+				j++;
+			}
+			j = 0;
+			i++;
+		}
+
+		if (!isColliding)
+		{
+			figureMoved = true;
+			m_tauler.moveRightCursor();
+		}
+	}
+
+	return figureMoved;
+}
+
+int Joc::baixaFigura()
+{
+	bool figureMoved = false, isColliding = false;
+	int i = 0, j = 0;
+
+	while (!isColliding && i < m_figuraActual.getMida())
+	{
+		while (!isColliding && j < m_figuraActual.getMida())
+		{
+			isColliding = linearMovementCondition(i, j, 1, 0, i, m_figuraActual.getMida() - 1);
+			j++;
+		}
+		j = 0;
+		i++;
+	}
+
+	if (!isColliding)
+	{
+		figureMoved = true;
+		m_tauler.moveDownCursor();
+	}
+
+	return figureMoved;
+}
+*/
 
 bool Joc::giraFigura(DireccioGir direccio)
 {
@@ -212,7 +298,35 @@ bool Joc::giraFigura(DireccioGir direccio)
 
 void Joc::escriuTaulerConsola()
 {
-	m_tauler.mostraTauler();
+	int minX, minY, maxX, maxY;
+
+	minX = m_tauler.getCursorX() - m_figuraActual.getCentreX();
+	minY = m_tauler.getCursorY() - m_figuraActual.getCentreY();
+	maxX = minX + m_figuraActual.getMida() - 1;
+	maxY = minY + m_figuraActual.getMida() - 1;
+
+	for (int i = 0; i < N_FILES; i++)
+	{
+		for (int j = 0; j < N_COLUMNES; j++)
+		{
+			if ((i >= minX && i <= maxX) && (j >= minY && j <= maxY))
+			{
+				if (i == m_tauler.getCursorX() && j == m_tauler.getCursorY())
+				{
+					cout << "X ";
+				}
+				else
+				{
+					cout << m_figuraActual.getMatriuOnIndex(i - minX, j - minY) << " ";
+				}
+			}
+			else
+			{
+				cout << m_tauler.getCellOnIndex(i, j) << " ";
+			}
+		}
+		cout << endl;
+	}
 }
 
 void Joc::inicialitza(const string& nomFitxer)
