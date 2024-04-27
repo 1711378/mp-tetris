@@ -3,9 +3,12 @@
 
 const int MAX_MIDA_FIGURA = 4;
 const int NUM_DE_FIGURES = 7;
+const int NUM_DE_COLORS = 10;
 const int BLOCS_PER_FIGURA = 4;
 
 #include "Punt.h"
+#include <map>
+#include <vector>
 
 const bool ESTAT_INICIAL_FIGURES[NUM_DE_FIGURES][BLOCS_PER_FIGURA] =
 {

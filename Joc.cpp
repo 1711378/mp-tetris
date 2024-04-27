@@ -223,41 +223,51 @@ void Joc::inicialitza(const string& nomFitxer)
 
 	if (fitxer.is_open())
 	{
-		TipusFigura formaFigura;
 		Punt centre;
-		int x, y;
-		int formaGir;
-		int num;
+		int formaFigura, color, x, y, formaGir, i = 0, j = 0;
 
 		fitxer >> formaFigura >> x >> y >> formaGir;
 
-		m_figuraActual.inicialitzaMatriuFigura(formaFigura);
+		m_figuraActual.inicialitzaMatriuFigura(static_cast<TipusFigura>(formaFigura));
 		m_tauler.setCursorX(x);
 		m_tauler.setCursorY(y);
 		m_figuraActual.setFormaGir(formaGir);
-		fitxer >> num;
-		while (!fitxer.eof())
+
+		fitxer >> color;
+		while (!fitxer.eof() && i < N_FILES)
 		{
-
-
+			while (!fitxer.eof() && j < N_COLUMNES)
+			{
+				m_tauler.setCellOnIndex(i, j, static_cast<ColorFigura>(color));
+				fitxer >> color;
+				j++;
+			}
+			j = 0;
+			i++;
 		}
-	}
 
+		fitxer.close();
+	}
 }
 
 void Joc::escriuTauler(const string& nomFitxer)
 {
+	ofstream fitxer;
 
-}
+	fitxer.open(nomFitxer);
 
+	if (fitxer.is_open())
+	{
+		fitxer << m_figuraActual.getForma() << m_tauler.getCursorX() << m_tauler.getCursorY() << m_figuraActual.getFormaGir();
 
-ifstream& operator>>(ifstream& input, TipusFigura forma)
-{
-	TipusFigura valorForma;
+		for (int i = 0; i < N_FILES; i++)
+		{
+			for (int j = 0; j < N_COLUMNES; j++)
+			{
+				fitxer << m_tauler.getCellOnIndex(i, j);
+			}
+		}
 
-	input >> valorForma;
-
-	forma = valorForma;
-
-	return input;
+		fitxer.close();
+	}
 }

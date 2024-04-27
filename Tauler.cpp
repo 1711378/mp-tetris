@@ -9,6 +9,7 @@ Tauler::Tauler()
 	{
 		for (int j = 0; j < N_COLUMNES; j++)
 		{
+			/*
 			if ((j == 0 || j == N_COLUMNES - 1) || (i == N_FILES - 1))
 			{
 				m_tauler[i][j] = COLOR_GRIS;
@@ -17,6 +18,8 @@ Tauler::Tauler()
 			{
 				m_tauler[i][j] = COLOR_NEGRE;
 			}
+			*/
+			m_tauler[i][j] = COLOR_NEGRE;
 		}
 	}
 
@@ -30,6 +33,7 @@ Tauler::Tauler(ColorFigura color, int cursorX, int cursorY)
 	{
 		for (int j = 0; j < N_COLUMNES; j++)
 		{
+			/*
 			if ((j == 0 || j == N_COLUMNES - 1) || (i == N_FILES - 1))
 			{
 				m_tauler[i][j] = COLOR_GRIS;
@@ -38,6 +42,8 @@ Tauler::Tauler(ColorFigura color, int cursorX, int cursorY)
 			{
 				m_tauler[i][j] = color;
 			}
+			*/
+			m_tauler[i][j] = color;
 		}
 	}
 
