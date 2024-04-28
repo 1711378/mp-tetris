@@ -43,16 +43,28 @@ int main() {
 	cout << endl;
 
 	Joc prueba(FIGURA_I);
-	prueba.giraFigura(GIR_HORARI);
 
 	cout << "Tablero de prueba movimiento: " << endl;
 	prueba.escriuTaulerConsola();
 	cout << endl;
-	//cout << "Mov posible: " << prueba.mouFigura(MOV_ESQ);
-	cout << "Mov posible: " << prueba.baixaFigura();
-	cout << endl;
+
+	prueba.inicialitza("pruebaInput1.txt");
+	prueba.DWFigura(false);
 	prueba.escriuTaulerConsola();
-	prueba.escriuTauler("prueba1.txt");
+	prueba.escriuTauler("pruebaGiro1.txt");
+	cout << endl;
+
+	prueba.giraFigura(GIR_HORARI);
+	prueba.escriuTaulerConsola();
+	prueba.escriuTauler("pruebaGiro2.txt");
+	cout << endl;
+
+	prueba.baixaFigura();
+	prueba.escriuTaulerConsola();
+	prueba.escriuTauler("pruebaGiro3.txt");
+	cout << endl;
+
+	cout << endl;
 	
 	return 0;
 }
