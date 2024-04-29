@@ -24,7 +24,8 @@ public:
 	void moveRightCursor() { m_cursor.incY(); };
 	void moveLeftCursor() { m_cursor.decY(); };
 
-	int getCellOnIndex(int fila, int columna) const { return m_tauler[fila][columna]; };
+	ColorFigura getCellOnIndex(int fila, int columna) const { return m_tauler[fila][columna]; };
+	//ColorFigura getCellOnIndexColor(int fila, int columna) const { return m_tauler[fila][columna]; };
 	int getCursorX() { return m_cursor.getX(); };
 	int getCursorY() { return m_cursor.getY(); };
 	void mostraTauler() const;

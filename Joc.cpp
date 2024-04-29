@@ -2,7 +2,7 @@
 
 Joc::Joc(TipusFigura forma)
 {		
-	m_tauler.setCursorX(3);
+	m_tauler.setCursorX(4);
 	m_tauler.setCursorY(5);
 
 	m_figuraActual.inicialitzaMatriuFigura(forma);
@@ -150,6 +150,48 @@ int Joc::baixaFigura()
 	}
 
 	return figureMoved;
+}
+
+int Joc::eliminaFiles()
+{
+	bool filaLlena = true;
+	int filesEliminades = 0, j = N_COLUMNES - 1;
+
+	// Revisamos todas las casillas del Tauler
+	for (int i = N_FILES - 1; i >= 0; i--)
+	{
+		while (j >= 0 && filaLlena)
+		{
+			// Si hay una sola casilla vacia en una fila, salimos del bucle while y revisamos la siguiente fila
+			if (!m_tauler.getCellOnIndex(i, j))
+				filaLlena = false;
+			else
+				j--;
+		}
+
+		// Si, despues de completar el while, no hemos encontrado ninguna casilla vacia, eliminamos la fila i
+		if (filaLlena)
+		{
+			filesEliminades++;
+
+			// Desplazamos todas las casillas una fila hacia abajo excepto las de la primera fila
+			for (int x = N_COLUMNES - 1; x >= 0; x--)
+			{
+				for (int y = i; y > 0; y--)
+					m_tauler.setCellOnIndex(y, x, m_tauler.getCellOnIndex(y + 1, x));
+			}
+
+			// Llenamos de 0 todas las casillas de la primera fila
+			for (int x = N_COLUMNES - 1; x >= 0; x--)
+				m_tauler.setCellOnIndex(0, x, COLOR_NEGRE);
+		}
+
+		// Reinicializamos la j para volver a empezar
+		j = N_COLUMNES - 1;
+	}
+
+	return filesEliminades;
+
 }
 
 bool Joc::giraFigura(DireccioGir direccio)

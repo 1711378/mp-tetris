@@ -37,6 +37,7 @@ public:
 	bool mouFigura(DireccioMov dirX);
 	int baixaFigura();
 	void DWFigura(bool DeleteWrite); // Delete/Write Figura
+	int eliminaFiles();
 
 	bool canMove(TipusDeMov mov, DireccioGir direccio, DireccioMov dirX);
 	bool linearMovementCondition(int i, int j, int iConstantTerm, int jConstantTerm, int marginalVariable, int stopCondition);
