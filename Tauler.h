@@ -28,7 +28,6 @@ public:
 	//ColorFigura getCellOnIndexColor(int fila, int columna) const { return m_tauler[fila][columna]; };
 	int getCursorX() { return m_cursor.getX(); };
 	int getCursorY() { return m_cursor.getY(); };
-	void mostraTauler() const;
 private:
 	ColorFigura m_tauler[N_FILES][N_COLUMNES];
 	Punt m_cursor;

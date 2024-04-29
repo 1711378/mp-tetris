@@ -1,35 +1,45 @@
 #include <iostream>
+#include <stdlib.h> // system() function
 #include "Joc.h"
 
 using namespace std;
 
-void testDebugging(TipusFigura figura)
+void testDebugging(TipusFigura figura, const string& nomFitxer, bool showCursor)
 {
 	char userInput;
 	Joc juego(figura);
 
-	juego.escriuTaulerConsola();
+	if (nomFitxer != "")
+	{
+		juego.inicialitza(nomFitxer);
+	}
+
+	juego.escriuTaulerConsola(showCursor);
 	cout << endl;
 
-	cout << "Ingrese una accion. " << endl;
+	cout << "Ingrese una accion: ";
 	cin >> userInput;
 
-	while (userInput != 'q')
+	while (userInput != 'q' && userInput != 'Q')
 	{
 		switch (userInput)
 		{
+			case 'W':
 			case 'w':
 				juego.giraFigura(GIR_HORARI);
 			break;
 			
+			case 'A':
 			case 'a':
 				juego.mouFigura(MOV_ESQ);
 			break;
 
+			case 'S':
 			case 's':
 				juego.baixaFigura();
 			break;
 
+			case 'D':
 			case 'd':
 				juego.mouFigura(MOV_DRE);
 			break;
@@ -38,11 +48,13 @@ void testDebugging(TipusFigura figura)
 			break;
 		}
 
-		juego.escriuTaulerConsola();
+		system("CLS");
+		juego.escriuTaulerConsola(showCursor);
 		cout << endl;
 
-		cout << "Ingrese una accion. " << endl;
+		cout << "Ingrese una accion: ";
 		cin >> userInput;
+		cout << flush;
 	}
 
 	juego.escriuTauler("resultado.txt");
@@ -112,7 +124,7 @@ int main() {
 	cout << endl;
 	*/
 
-	testDebugging(FIGURA_O);
+	testDebugging(FIGURA_T, "pruebaInput1.txt", true);
 	
 	return 0;
 }

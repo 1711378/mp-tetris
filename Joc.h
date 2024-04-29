@@ -33,6 +33,7 @@ public:
 	Joc(TipusFigura forma);
 
 	void inicialitza(const string& nomFitxer);
+	void escriuTauler(const string& nomFitxer);
 	bool giraFigura(DireccioGir direccio);
 	bool mouFigura(DireccioMov dirX);
 	int baixaFigura();
@@ -41,8 +42,7 @@ public:
 
 	bool canMove(TipusDeMov mov, DireccioGir direccio, DireccioMov dirX);
 	bool linearMovementCondition(int i, int j, int iConstantTerm, int jConstantTerm, int marginalVariable, int stopCondition);
-	void escriuTauler(const string& nomFitxer);
-	void escriuTaulerConsola();
+	void escriuTaulerConsola(bool showCursor);
 private:
 	Figura m_figuraActual;
 	Tauler m_tauler;

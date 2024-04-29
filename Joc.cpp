@@ -1,35 +1,20 @@
 #include "joc.h"
 
+int randomNumber(int numMin, int numMax)
+{
+	int numAleatori;
+
+	numAleatori = numMin + (rand() % (numMax - numMin + 1));
+
+	return numAleatori;
+}
+
 Joc::Joc(TipusFigura forma)
 {		
 	m_tauler.setCursorX(4);
 	m_tauler.setCursorY(5);
 
 	m_figuraActual.inicialitzaMatriuFigura(forma);
-}
-
-bool Joc::linearMovementCondition(int i, int j, int iConstantTerm, int jConstantTerm, int marginalVariable, int stopCondition)
-{
-	bool isColliding = false;
-	
-	if (marginalVariable == stopCondition &&
-		m_figuraActual.getMatriuOnIndex(i, j) &&
-		m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i + iConstantTerm,
-								m_tauler.getCursorY() - m_figuraActual.getCentreY() + j + jConstantTerm) &&
-		(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i + iConstantTerm) >= N_FILES &&
-		 m_tauler.getCursorY() - m_figuraActual.getCentreY() + j + jConstantTerm >= N_COLUMNES)
-	{
-		isColliding = true;
-	}
-	else if (m_figuraActual.getMatriuOnIndex(i, j) &&
-			!(m_figuraActual.getMatriuOnIndex(i + iConstantTerm, j + jConstantTerm)) &&
-			m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i + iConstantTerm,
-									m_tauler.getCursorY() - m_figuraActual.getCentreY() + j + jConstantTerm))
-	{
-		isColliding = true;
-	}
-
-	return isColliding;
 }
 
 bool Joc::mouFigura(DireccioMov dirX)
@@ -124,7 +109,7 @@ int Joc::baixaFigura()
 				m_figuraActual.getMatriuOnIndex(i, j) &&
 				m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i + 1,
 					m_tauler.getCursorY() - m_figuraActual.getCentreY() + j) ||
-				m_tauler.getCursorX() - m_figuraActual.getCentreX() + i == N_FILES - 1)
+				(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i == N_FILES - 1 && m_figuraActual.getMatriuOnIndex(i, j)))
 			{
 				isColliding = true;
 			}
@@ -343,7 +328,7 @@ void Joc::DWFigura(bool DeleteWrite)
 	}
 }
 
-void Joc::escriuTaulerConsola()
+void Joc::escriuTaulerConsola(bool showCursor)
 {
 	int minX, minY, maxX, maxY;
 
@@ -360,11 +345,22 @@ void Joc::escriuTaulerConsola()
 			{
 				if (i == m_tauler.getCursorX() && j == m_tauler.getCursorY())
 				{
-					cout << "X ";
+					if (showCursor)
+					{
+						cout << "X ";
+					}
+					else
+					{
+						cout << m_figuraActual.getColor() << " ";
+					}
+				}
+				else if (m_figuraActual.getMatriuOnIndex(i - minX, j - minY))
+				{
+					cout << m_figuraActual.getColor() << " ";
 				}
 				else
 				{
-					cout << m_figuraActual.getMatriuOnIndex(i - minX, j - minY) << " ";
+					cout << m_tauler.getCellOnIndex(i, j) << " ";
 				}
 			}
 			else
