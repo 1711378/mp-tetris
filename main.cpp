@@ -124,7 +124,7 @@ int main() {
 	cout << endl;
 	*/
 
-	testDebugging(FIGURA_T, "pruebaInput1.txt", true);
+	testDebugging(FIGURA_T, "", true);
 	
 	return 0;
 }

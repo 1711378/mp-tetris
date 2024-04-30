@@ -5,8 +5,8 @@
 #include <iostream>
 //#include "Punt.h"
 
-const int N_FILES = 9;
-const int N_COLUMNES = 10;
+const int N_FILES = 8;
+const int N_COLUMNES = 8;
 const int POS_INICIAL_X = 1;
 const int POS_INICIAL_Y = 3;
 

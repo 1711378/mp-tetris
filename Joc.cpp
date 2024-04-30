@@ -11,7 +11,7 @@ int randomNumber(int numMin, int numMax)
 
 Joc::Joc(TipusFigura forma)
 {		
-	m_tauler.setCursorX(4);
+	m_tauler.setCursorX(1);
 	m_tauler.setCursorY(5);
 
 	m_figuraActual.inicialitzaMatriuFigura(forma);
@@ -265,7 +265,9 @@ bool Joc::giraFigura(DireccioGir direccio)
 	{
 		while (!isColliding && j < copiaFiguraGirada.getMida())
 		{
-			if (copiaFiguraGirada.getMatriuOnIndex(i, j) && 
+			if (m_tauler.getCursorY() - copiaFiguraGirada.getCentreY() + j < 0 ||
+				m_tauler.getCursorY() - copiaFiguraGirada.getCentreY() + j >= N_COLUMNES ||
+				copiaFiguraGirada.getMatriuOnIndex(i, j) &&
 				m_tauler.getCellOnIndex(m_tauler.getCursorX() - copiaFiguraGirada.getCentreX() + i,
 										m_tauler.getCursorY() - copiaFiguraGirada.getCentreY() + j))
 			{
