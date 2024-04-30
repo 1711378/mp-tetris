@@ -400,7 +400,6 @@ void Joc::inicialitza(const string& nomFitxer)
 		m_figuraActual.inicialitzaMatriuFigura(static_cast<TipusFigura>(formaFigura));
 		m_tauler.setCursorX(x);
 		m_tauler.setCursorY(y);
-		//m_figuraActual.setFormaGir(formaGir);
 
 		if (formaGir != 0)
 		{
