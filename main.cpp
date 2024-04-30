@@ -124,7 +124,7 @@ int main() {
 	cout << endl;
 	*/
 
-	testDebugging(FIGURA_T, "", true);
+	testDebugging(FIGURA_T, "PruebaEliminaFilas.txt", true);
 	
 	return 0;
 }

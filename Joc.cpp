@@ -100,6 +100,7 @@ int Joc::baixaFigura()
 {
 	bool figureMoved = false, isColliding = false;
 	int i = 0, j = 0;
+	int nFilesCompletadas = 0;
 
 	while (!isColliding && i < m_figuraActual.getMida())
 	{
@@ -133,6 +134,9 @@ int Joc::baixaFigura()
 		m_tauler.moveDownCursor(); // Movemos la figura
 		DWFigura(false); // Redibujamos la figura en su nueva posicion
 	}
+	else
+		nFilesCompletadas = eliminaFiles();
+
 
 	return figureMoved;
 }
@@ -160,10 +164,10 @@ int Joc::eliminaFiles()
 			filesEliminades++;
 
 			// Desplazamos todas las casillas una fila hacia abajo excepto las de la primera fila
-			for (int x = N_COLUMNES - 1; x >= 0; x--)
+			for (int x = i; x >= 0; x--)
 			{
-				for (int y = i; y > 0; y--)
-					m_tauler.setCellOnIndex(y, x, m_tauler.getCellOnIndex(y + 1, x));
+				for (int y = N_COLUMNES - 1; y >= 0; y--)
+					m_tauler.setCellOnIndex(x, y, m_tauler.getCellOnIndex(x - 1, y));
 			}
 
 			// Llenamos de 0 todas las casillas de la primera fila
@@ -171,8 +175,9 @@ int Joc::eliminaFiles()
 				m_tauler.setCellOnIndex(0, x, COLOR_NEGRE);
 		}
 
-		// Reinicializamos la j para volver a empezar
+		// Reinicializamos las variables para volver a empezar
 		j = N_COLUMNES - 1;
+		filaLlena = true;
 	}
 
 	return filesEliminades;
@@ -204,24 +209,26 @@ bool Joc::giraFigura(DireccioGir direccio)
 			{
 			case 0:
 				copiaFiguraGirada.incCentreX();
-				copiaFiguraGirada.setFormaGir(1);
 				break;
 			case 1:
 				copiaFiguraGirada.decCentreY();
-				copiaFiguraGirada.setFormaGir(2);
 				break;
 			case 2:
 				copiaFiguraGirada.decCentreX();
-				copiaFiguraGirada.setFormaGir(3);
 				break;
 			case 3:
 				copiaFiguraGirada.incCentreY();
-				copiaFiguraGirada.setFormaGir(0);
 				break;
 			default:
 				break;
 			}
 		}
+
+		// Actualizar la forma de giro de la figura
+		if (copiaFiguraGirada.getFormaGir() < 3)
+			copiaFiguraGirada.setFormaGir(copiaFiguraGirada.getFormaGir() + 1);
+		else
+			copiaFiguraGirada.setFormaGir(0);
 	}
 	else if (direccio == GIR_ANTI_HORARI && copiaFiguraGirada.getForma() != FIGURA_O)
 	{
@@ -236,24 +243,26 @@ bool Joc::giraFigura(DireccioGir direccio)
 			{
 			case 3:
 				copiaFiguraGirada.incCentreX();
-				copiaFiguraGirada.setFormaGir(2);
 				break;
 			case 2:
 				copiaFiguraGirada.incCentreY();
-				copiaFiguraGirada.setFormaGir(1);
 				break;
 			case 1:
 				copiaFiguraGirada.decCentreX();
-				copiaFiguraGirada.setFormaGir(0);
 				break;
 			case 0:
 				copiaFiguraGirada.decCentreY();
-				copiaFiguraGirada.setFormaGir(3);
 				break;
 			default:
 				break;
 			}
 		}
+
+		// Actualizar la forma de giro de la figura
+		if (copiaFiguraGirada.getFormaGir() > 0)
+			copiaFiguraGirada.setFormaGir(copiaFiguraGirada.getFormaGir() - 1);
+		else
+			copiaFiguraGirada.setFormaGir(3);
 	}
 	else if (direccio != GIR_ANTI_HORARI && direccio != GIR_HORARI)
 	{
@@ -267,6 +276,7 @@ bool Joc::giraFigura(DireccioGir direccio)
 		{
 			if (m_tauler.getCursorY() - copiaFiguraGirada.getCentreY() + j < 0 ||
 				m_tauler.getCursorY() - copiaFiguraGirada.getCentreY() + j >= N_COLUMNES ||
+				m_tauler.getCursorX() - copiaFiguraGirada.getCentreX() + i < 0 ||
 				copiaFiguraGirada.getMatriuOnIndex(i, j) &&
 				m_tauler.getCellOnIndex(m_tauler.getCursorX() - copiaFiguraGirada.getCentreX() + i,
 										m_tauler.getCursorY() - copiaFiguraGirada.getCentreY() + j))
@@ -390,12 +400,21 @@ void Joc::inicialitza(const string& nomFitxer)
 		m_figuraActual.inicialitzaMatriuFigura(static_cast<TipusFigura>(formaFigura));
 		m_tauler.setCursorX(x);
 		m_tauler.setCursorY(y);
-		m_figuraActual.setFormaGir(formaGir);
+		//m_figuraActual.setFormaGir(formaGir);
+
+		if (formaGir != 0)
+		{
+			for (int i = 0; i < formaGir; i++)
+			{
+				giraFigura(GIR_HORARI);
+
+			}
+		}
 
 		fitxer >> color;
 		while (!fitxer.eof() && i < N_FILES)
 		{
-			while (!fitxer.eof() && j < N_COLUMNES)
+			while (j < N_COLUMNES)
 			{
 				m_tauler.setCellOnIndex(i, j, static_cast<ColorFigura>(color));
 				fitxer >> color;
