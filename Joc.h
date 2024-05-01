@@ -5,14 +5,10 @@
 #include "Tauler.h"
 #include <fstream>
 
-using namespace std;
+#include "Figura.h"
+#include <string>
 
-typedef enum
-{
-	NO_GIR = 0,
-	GIR_HORARI,
-	GIR_ANTI_HORARI
-} DireccioGir;
+using namespace std;
 
 typedef enum
 {
@@ -30,12 +26,14 @@ typedef enum
 
 class Joc {
 public:
+	Joc();
 	Joc(TipusFigura forma);
 
 	void inicialitza(const string& nomFitxer);
 	void escriuTauler(const string& nomFitxer);
+	void calculGir(DireccioGir direccio, Figura& figura);
 	bool giraFigura(DireccioGir direccio);
-	bool mouFigura(DireccioMov dirX);
+	bool mouFigura(int direccio);
 	int baixaFigura();
 	void DWFigura(bool DeleteWrite); // Delete/Write Figura
 	int eliminaFiles();

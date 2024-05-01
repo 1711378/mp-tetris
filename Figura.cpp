@@ -3,33 +3,6 @@
 
 using namespace std;
 
-//void matriuTrasposta(bool matriu[][MAX_MIDA_FIGURA], int mida)
-//{
-//	for (int i = 0; i < mida; i++)
-//	{
-//		for (int j = i + 1; j < mida; j++)
-//		{
-//			if (i != j && matriu[i][j] != matriu[j][i])
-//			{
-//				swap(matriu[i][j], matriu[j][i]);
-//			}
-//		}
-//	}
-//}
-
-//void matriuColumnesCanviades(bool matriu[][MAX_MIDA_FIGURA], int mida)
-//{
-//	for (int j = 0; j < mida / 2; j++)
-//	{
-//		for (int i = 0; i < mida; i++)
-//		{
-//			if (matriu[i][mida - 1 - j] != matriu[mida - 1 - j][i])
-//			{
-//				swap(matriu[i][mida - 1 - j], matriu[mida - 1 - j][i]);
-//			}
-//		}
-//	}
-//}
 
 void Figura::matriuColumnesCanviades()
 {
@@ -62,7 +35,7 @@ void Figura::matriuTrasposta()
 void Figura::inicialitzaMatriuFigura(TipusFigura forma)
 {
 	m_forma = forma;
-	m_mida = 4; // Inicializamos por defecto al valor más grande. Lo cambiaremos luego dependiendo de la forma
+	m_mida = 3; // Inicializamos por defecto al valor más común. Lo cambiaremos luego dependiendo de la forma
 
 	// Inicializamos toda la matriz a 0
 	for (int i = 0; i < MAX_MIDA_FIGURA; i++)
@@ -73,22 +46,46 @@ void Figura::inicialitzaMatriuFigura(TipusFigura forma)
 		}
 	}
 
-	// Asignamos la medida de la matriz y el centro de la figura dependiendo de la forma
+	// Asignamos la medida de la matriz, el color y el centro de la figura dependiendo de la forma
 	switch (forma)
 	{
-	case FIGURA_I:
-		m_centre.setY(2);
-		break;
+
 	case FIGURA_O:
+		m_centre.setX(1);
+		m_centre.setY(1);
+		m_color = COLOR_GROC;
 		m_mida = 2;
 		break;
-
+	case FIGURA_I:
+		m_centre.setX(1);
+		m_centre.setY(2);
+		m_color = COLOR_BLAUCEL;
+		m_mida = 4;
+		break;
 	case FIGURA_T:
+		m_centre.setX(1);
+		m_centre.setY(1);
+		m_color = COLOR_MAGENTA;
+		break;
 	case FIGURA_L:
+		m_centre.setX(1);
+		m_centre.setY(1);
+		m_color = COLOR_TARONJA;
+		break;
 	case FIGURA_J:
+		m_centre.setX(1);
+		m_centre.setY(1);
+		m_color = COLOR_BLAUFOSC;
+		break;
 	case FIGURA_Z:
+		m_centre.setX(1);
+		m_centre.setY(1);
+		m_color = COLOR_VERMELL;
+		break;
 	case FIGURA_S:
-		m_mida = 3;
+		m_centre.setX(1);
+		m_centre.setY(1);
+		m_color = COLOR_VERD;
 		break;
 
 	default:
@@ -105,7 +102,7 @@ void Figura::inicialitzaMatriuFigura(TipusFigura forma)
 	{
 		for (int j = 0; j < m_mida; j++)
 		{
-			if ((ESTAT_INICIAL_FIGURES[forma][positionOnInitialArray] && blocksPlaced < BLOCS_PER_FIGURA))
+			if ((ESTAT_INICIAL_FIGURES[static_cast<int>(forma) - 1][positionOnInitialArray] && blocksPlaced < BLOCS_PER_FIGURA))
 			{
 				m_matriu[i][j] = 1;
 				blocksPlaced++;

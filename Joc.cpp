@@ -1,6 +1,6 @@
 #include "joc.h"
 
-int randomNumber(int numMin, int numMax)
+/*int randomNumber(int numMin, int numMax)
 {
 	int numAleatori;
 
@@ -8,18 +8,39 @@ int randomNumber(int numMin, int numMax)
 
 	return numAleatori;
 }
+*/
+
+Joc::Joc() //Constructor Joc
+{
+	m_tauler.setCursorX(POS_INICIAL_X); //Assigna cursor X a posición inicial
+	m_tauler.setCursorY(POS_INICIAL_Y); //Assigna cursor Y a posición inicial
+}
 
 Joc::Joc(TipusFigura forma)
 {		
-	m_tauler.setCursorX(1);
-	m_tauler.setCursorY(5);
+	m_tauler.setCursorX(POS_INICIAL_X);
+	m_tauler.setCursorY(POS_INICIAL_Y);
 
 	m_figuraActual.inicialitzaMatriuFigura(forma);
 }
 
-bool Joc::mouFigura(DireccioMov dirX)
+bool Joc::mouFigura(int direccio)
 {
+	DireccioMov dirX;
+	
+	// Convertimos el parámetro direccio al tipo enum DireccioMov
+	if (direccio == 1)
+	{
+		dirX = MOV_DRE;
+	}
+	else if (direccio == -1)
+	{
+		dirX = MOV_ESQ;
+	}
+
 	bool figureMoved = false, isColliding = false;
+	bool currentCell, leftCell;
+	ColorFigura taulerCell;
 	int i = 0, j = 0;
 
 	if (dirX == MOV_ESQ)
@@ -28,18 +49,21 @@ bool Joc::mouFigura(DireccioMov dirX)
 		{
 			while (!isColliding && j < m_figuraActual.getMida())
 			{
-				if (j == 0 &&
-					m_figuraActual.getMatriuOnIndex(i, j) &&
-					m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i,
-											m_tauler.getCursorY() - m_figuraActual.getCentreY() + j - 1) ||
-					(m_tauler.getCursorY() - m_figuraActual.getCentreY() + j == 0 && m_figuraActual.getMatriuOnIndex(i, j)))
+				currentCell = m_figuraActual.getMatriuOnIndex(i, j);
+				leftCell = m_figuraActual.getMatriuOnIndex(i, j - 1);
+				taulerCell = m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i, m_tauler.getCursorY() - m_figuraActual.getCentreY() + j - 1);
+
+
+				// Revisamos si las celdas de la primera columna de la matriz figuraActual están ocupadas por 1s
+				// y si en las celdas equivalentes de la matriz tauler hay otras figuras
+				if (j == 0 && currentCell && taulerCell ||
+					(m_tauler.getCursorY() - m_figuraActual.getCentreY() + j == 0 && currentCell)) // o si alguna parte de la figura se está saliendo de la matriz tauler
 				{
 					isColliding = true;
 				}
-				else if (m_figuraActual.getMatriuOnIndex(i, j) &&
-					!(m_figuraActual.getMatriuOnIndex(i, j - 1)) &&
-					m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i,
-											m_tauler.getCursorY() - m_figuraActual.getCentreY() + j - 1))
+				else if (currentCell && !(leftCell) && taulerCell) // Confirmamos si hay un 1 en la celda de la matriz figuraActual,
+						// que no tenga otro 1 a su izquierda
+					 // y si la celda equivalente en la matriz tauler está ocupada
 				{
 					isColliding = true;
 				}
@@ -164,15 +188,17 @@ int Joc::eliminaFiles()
 			filesEliminades++;
 
 			// Desplazamos todas las casillas una fila hacia abajo excepto las de la primera fila
-			for (int x = i; x >= 0; x--)
+			for (int x = i; x > 0; x--)
 			{
 				for (int y = N_COLUMNES - 1; y >= 0; y--)
 					m_tauler.setCellOnIndex(x, y, m_tauler.getCellOnIndex(x - 1, y));
 			}
 
 			// Llenamos de 0 todas las casillas de la primera fila
-			for (int x = N_COLUMNES - 1; x >= 0; x--)
-				m_tauler.setCellOnIndex(0, x, COLOR_NEGRE);
+			for (int y = N_COLUMNES - 1; y >= 0; y--)
+				m_tauler.setCellOnIndex(0, y, COLOR_NEGRE);
+
+			i++;
 		}
 
 		// Reinicializamos las variables para volver a empezar
@@ -184,40 +210,34 @@ int Joc::eliminaFiles()
 
 }
 
-bool Joc::giraFigura(DireccioGir direccio)
+void Joc::calculGir(DireccioGir direccio, Figura& figura)
 {
-	bool figureSpinned = false, isColliding = false;
-	Figura copiaFiguraGirada;
-	int i = 0, j = 0;
-
-	// Borramos la figura del tablero en su posicion original
-	DWFigura(true); 
-
-	// Hacemos una shallow copy de la figura actual
-	copiaFiguraGirada = m_figuraActual; 
-
-	if (direccio == GIR_HORARI && copiaFiguraGirada.getForma() != FIGURA_O)
+	if (direccio == GIR_HORARI && figura.getForma() != FIGURA_O)
 	{
-		// Girar la copia de la figura
-		copiaFiguraGirada.matriuTrasposta();
-		copiaFiguraGirada.matriuColumnesCanviades();
+		// Girar la figura
+		figura.matriuTrasposta();
+		figura.matriuColumnesCanviades();
 
 		// Recalcular el centro de la Figura I
-		if (copiaFiguraGirada.getForma() == FIGURA_I)
+		if (figura.getForma() == FIGURA_I)
 		{
-			switch (copiaFiguraGirada.getFormaGir())
+			switch (figura.getFormaGir())
 			{
 			case 0:
-				copiaFiguraGirada.incCentreX();
+				figura.incCentreX();
+				m_tauler.moveDownCursor();
 				break;
 			case 1:
-				copiaFiguraGirada.decCentreY();
+				figura.decCentreY();
+				m_tauler.moveLeftCursor();
 				break;
 			case 2:
-				copiaFiguraGirada.decCentreX();
+				figura.decCentreX();
+				m_tauler.moveUpCursor();
 				break;
 			case 3:
-				copiaFiguraGirada.incCentreY();
+				figura.incCentreY();
+				m_tauler.moveRightCursor();
 				break;
 			default:
 				break;
@@ -225,33 +245,37 @@ bool Joc::giraFigura(DireccioGir direccio)
 		}
 
 		// Actualizar la forma de giro de la figura
-		if (copiaFiguraGirada.getFormaGir() < 3)
-			copiaFiguraGirada.setFormaGir(copiaFiguraGirada.getFormaGir() + 1);
+		if (figura.getFormaGir() < 3)
+			figura.setFormaGir(figura.getFormaGir() + 1);
 		else
-			copiaFiguraGirada.setFormaGir(0);
+			figura.setFormaGir(0);
 	}
-	else if (direccio == GIR_ANTI_HORARI && copiaFiguraGirada.getForma() != FIGURA_O)
+	else if (direccio == GIR_ANTI_HORARI && figura.getForma() != FIGURA_O)
 	{
-		// Girar la copia de la figura
-		copiaFiguraGirada.matriuColumnesCanviades();
-		copiaFiguraGirada.matriuTrasposta();
+		// Girar la figura
+		figura.matriuColumnesCanviades();
+		figura.matriuTrasposta();
 
 		// Recalcular el centro de la Figura I
-		if (copiaFiguraGirada.getForma() == FIGURA_I)
+		if (figura.getForma() == FIGURA_I)
 		{
-			switch (copiaFiguraGirada.getFormaGir())
+			switch (figura.getFormaGir())
 			{
 			case 3:
-				copiaFiguraGirada.incCentreX();
+				figura.incCentreX();
+				m_tauler.moveDownCursor();
 				break;
 			case 2:
-				copiaFiguraGirada.incCentreY();
+				figura.incCentreY();
+				m_tauler.moveRightCursor();
 				break;
 			case 1:
-				copiaFiguraGirada.decCentreX();
+				figura.decCentreX();
+				m_tauler.moveUpCursor();
 				break;
 			case 0:
-				copiaFiguraGirada.decCentreY();
+				figura.decCentreY();
+				m_tauler.moveLeftCursor();
 				break;
 			default:
 				break;
@@ -259,15 +283,34 @@ bool Joc::giraFigura(DireccioGir direccio)
 		}
 
 		// Actualizar la forma de giro de la figura
-		if (copiaFiguraGirada.getFormaGir() > 0)
-			copiaFiguraGirada.setFormaGir(copiaFiguraGirada.getFormaGir() - 1);
+		if (figura.getFormaGir() > 0)
+			figura.setFormaGir(figura.getFormaGir() - 1);
 		else
-			copiaFiguraGirada.setFormaGir(3);
+			figura.setFormaGir(3);
 	}
 	else if (direccio != GIR_ANTI_HORARI && direccio != GIR_HORARI)
 	{
 		cout << "Error. Valor de giro invalido." << endl;
 	}
+}
+
+bool Joc::giraFigura(DireccioGir direccio)
+{
+	bool figureSpinned = false, isColliding = false;
+	Figura copiaFiguraGirada;
+	int originalCursorX, originalCursorY;
+	int i = 0, j = 0;
+
+	// Borramos la figura del tablero en su posicion original
+	DWFigura(true); 
+
+	// Hacemos una shallow copy de la figura actual y guardamos los valores originales del cursor del tablero
+	copiaFiguraGirada = m_figuraActual; 
+	originalCursorX = m_tauler.getCursorX();
+	originalCursorY = m_tauler.getCursorY();
+
+	// Giramos la copia de la figura
+	calculGir(direccio, copiaFiguraGirada);
 
 	// Comprobamos si la copia girada colisiona con otra figura
 	while (!isColliding && i < copiaFiguraGirada.getMida())
@@ -276,10 +319,9 @@ bool Joc::giraFigura(DireccioGir direccio)
 		{
 			if (m_tauler.getCursorY() - copiaFiguraGirada.getCentreY() + j < 0 ||
 				m_tauler.getCursorY() - copiaFiguraGirada.getCentreY() + j >= N_COLUMNES ||
-				m_tauler.getCursorX() - copiaFiguraGirada.getCentreX() + i < 0 ||
-				copiaFiguraGirada.getMatriuOnIndex(i, j) &&
-				m_tauler.getCellOnIndex(m_tauler.getCursorX() - copiaFiguraGirada.getCentreX() + i,
-										m_tauler.getCursorY() - copiaFiguraGirada.getCentreY() + j))
+				(copiaFiguraGirada.getMatriuOnIndex(i, j) &&
+				 m_tauler.getCellOnIndex(m_tauler.getCursorX() - copiaFiguraGirada.getCentreX() + i,
+				 m_tauler.getCursorY() - copiaFiguraGirada.getCentreY() + j)))
 			{
 				isColliding = true;
 			}
@@ -292,12 +334,17 @@ bool Joc::giraFigura(DireccioGir direccio)
 		i++;
 	}
 
+	// Si no hay colisiones, igualamos la figura actual a la copia girada
 	if (!isColliding)
 	{
 		figureSpinned = true;
-
-		// Igualamos la figura actual a la copia girada
 		m_figuraActual = copiaFiguraGirada;
+	}
+	else
+	{
+		// Si hay colisiones, regresamos el cursor a su valor original
+		m_tauler.setCursorX(originalCursorX);
+		m_tauler.setCursorY(originalCursorY);
 	}
 
 	// Redibujamos la figura, independientemente de los cambios
@@ -392,23 +439,26 @@ void Joc::inicialitza(const string& nomFitxer)
 
 	if (fitxer.is_open())
 	{
-		Punt centre;
 		int formaFigura, color, x, y, formaGir, i = 0, j = 0;
+		Punt centre;
 
 		fitxer >> formaFigura >> x >> y >> formaGir;
 
+		DWFigura(true);
+		m_figuraActual.setFormaGir(0);
 		m_figuraActual.inicialitzaMatriuFigura(static_cast<TipusFigura>(formaFigura));
-		m_tauler.setCursorX(x);
-		m_tauler.setCursorY(y);
+		m_tauler.setCursorX(x + m_figuraActual.getCentreX() - 1);
+		m_tauler.setCursorY(y + m_figuraActual.getCentreY() - 1);
 
 		if (formaGir != 0)
 		{
 			for (int i = 0; i < formaGir; i++)
 			{
-				giraFigura(GIR_HORARI);
-
+				calculGir(GIR_HORARI, m_figuraActual);
 			}
 		}
+
+		i = 0, j = 0;
 
 		fitxer >> color;
 		while (!fitxer.eof() && i < N_FILES)
@@ -424,6 +474,8 @@ void Joc::inicialitza(const string& nomFitxer)
 		}
 
 		fitxer.close();
+
+		DWFigura(false);
 	}
 }
 
@@ -435,8 +487,6 @@ void Joc::escriuTauler(const string& nomFitxer)
 
 	if (fitxer.is_open())
 	{
-		fitxer << m_figuraActual.getForma() << " " << m_tauler.getCursorX() << " " << m_tauler.getCursorY() << " " << m_figuraActual.getFormaGir() << endl;
-
 		for (int i = 0; i < N_FILES; i++)
 		{
 			for (int j = 0; j < N_COLUMNES; j++)

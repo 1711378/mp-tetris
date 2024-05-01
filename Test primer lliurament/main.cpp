@@ -1,67 +1,8 @@
-﻿#include <iostream>
-#include <stdlib.h> // system() function
 #include "Joc.h"
-
 #include <fstream>
+#include <iostream>
 #include <string>
-
 using namespace std;
-
-void testDebugging(TipusFigura figura, const string& nomFitxer, bool showCursor)
-{
-	char userInput;
-	Joc juego(figura);
-
-	if (nomFitxer != "")
-	{
-		juego.inicialitza(nomFitxer);
-	}
-
-	juego.escriuTaulerConsola(showCursor);
-	cout << endl;
-
-	cout << "Ingrese una accion: ";
-	cin >> userInput;
-
-	while (userInput != 'q' && userInput != 'Q')
-	{
-		switch (userInput)
-		{
-			case 'W':
-			case 'w':
-				juego.giraFigura(GIR_HORARI);
-			break;
-			
-			case 'A':
-			case 'a':
-				juego.mouFigura(MOV_ESQ);
-			break;
-
-			case 'S':
-			case 's':
-				juego.baixaFigura();
-			break;
-
-			case 'D':
-			case 'd':
-				juego.mouFigura(MOV_DRE);
-			break;
-
-			default:
-			break;
-		}
-
-		system("CLS");
-		juego.escriuTaulerConsola(showCursor);
-		cout << endl;
-
-		cout << "Ingrese una accion: ";
-		cin >> userInput;
-		cout << flush;
-	}
-
-	juego.escriuTauler("resultado.txt");
-}
 
 string tipusToString(int tipus)
 {
@@ -113,7 +54,7 @@ void mostraFitxerInicial(const string& nomFitxerInicial)
 		cout << "Comment :=>> Posicio inicial de la figura: (" << fila << "," << columna << ")" << endl;
 		cout << "Comment :=>> Gir inicial de la figura: " << gir << endl;
 		cout << "Comment :=>> ------------" << endl;
-		cout << "Comment :=>> Contingut inicial del tauler: " << endl;
+		cout << "Comment :=>> Contingut inicial del tauler: "<< endl;
 		cout << "Comment :=>> -----------------------------" << endl;
 
 		string linia;
@@ -320,7 +261,7 @@ int main()
 	correcte = comparaResultatPartida("./data/resultat_mou_figura_1.txt", "./data/resultat_esperat_mou_figura_1.txt");
 	if (!correcte)
 		reduccio += 0.5;
-
+	
 	// Mou figura esquerra i pot degut al gir
 	cout << "Comment :=>> ------------------------------------------------" << endl;
 	cout << "Comment :=>> TEST 4" << endl;

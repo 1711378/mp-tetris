@@ -7,8 +7,6 @@ const int NUM_DE_COLORS = 10;
 const int BLOCS_PER_FIGURA = 4;
 
 #include "Punt.h"
-#include <map>
-#include <vector>
 
 const bool ESTAT_INICIAL_FIGURES[NUM_DE_FIGURES][BLOCS_PER_FIGURA] =
 {
@@ -23,29 +21,36 @@ const bool ESTAT_INICIAL_FIGURES[NUM_DE_FIGURES][BLOCS_PER_FIGURA] =
 
 typedef enum
 {
-	FIGURA_O = 0,
+	GIR_HORARI = 0,
+	GIR_ANTI_HORARI
+} DireccioGir;
+
+typedef enum
+{
+	COLOR_NEGRE = 0,
+	COLOR_GROC,
+	COLOR_BLAUCEL,
+	COLOR_MAGENTA,
+	COLOR_TARONJA,
+	COLOR_BLAUFOSC,
+	COLOR_VERMELL,
+	COLOR_VERD,
+	NO_COLOR
+} ColorFigura;
+
+typedef enum
+{
+	NO_FIGURA = 0,
+	FIGURA_O,
 	FIGURA_I,
 	FIGURA_T,
 	FIGURA_L,
 	FIGURA_J,
 	FIGURA_Z,
 	FIGURA_S,
-	NO_FIGURA
 } TipusFigura;
 
-typedef enum
-{
-	COLOR_NEGRE = 0,
-	COLOR_BLAUCEL,
-	COLOR_GROC,
-	COLOR_MAGENTA,
-	COLOR_TARONJA,
-	COLOR_BLAUFOSC,
-	COLOR_VERD,
-	COLOR_VERMELL,
-	COLOR_GRIS, // Color del borde del tablero
-	NO_COLOR
-} ColorFigura;
+
 
 class Figura 
 {
