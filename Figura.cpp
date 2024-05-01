@@ -24,7 +24,7 @@ void Figura::matriuTrasposta()
 	{
 		for (int j = i + 1; j < m_mida; j++)
 		{
-			if (i != j && m_matriu[i][j] != m_matriu[j][i])
+			if (m_matriu[i][j] != m_matriu[j][i])
 			{
 				swap(m_matriu[i][j], m_matriu[j][i]);
 			}
@@ -35,7 +35,9 @@ void Figura::matriuTrasposta()
 void Figura::inicialitzaMatriuFigura(TipusFigura forma)
 {
 	m_forma = forma;
-	m_mida = 3; // Inicializamos por defecto al valor más común. Lo cambiaremos luego dependiendo de la forma
+	m_mida = 3; // Inicializamos por defecto  la mida y el cetro a los valores más comunes. Lo cambiaremos luego dependiendo de la forma
+	m_centre.setX(1);
+	m_centre.setY(1);
 
 	// Inicializamos toda la matriz a 0
 	for (int i = 0; i < MAX_MIDA_FIGURA; i++)
@@ -51,40 +53,27 @@ void Figura::inicialitzaMatriuFigura(TipusFigura forma)
 	{
 
 	case FIGURA_O:
-		m_centre.setX(1);
-		m_centre.setY(1);
 		m_color = COLOR_GROC;
 		m_mida = 2;
 		break;
 	case FIGURA_I:
-		m_centre.setX(1);
 		m_centre.setY(2);
 		m_color = COLOR_BLAUCEL;
 		m_mida = 4;
 		break;
 	case FIGURA_T:
-		m_centre.setX(1);
-		m_centre.setY(1);
 		m_color = COLOR_MAGENTA;
 		break;
 	case FIGURA_L:
-		m_centre.setX(1);
-		m_centre.setY(1);
 		m_color = COLOR_TARONJA;
 		break;
 	case FIGURA_J:
-		m_centre.setX(1);
-		m_centre.setY(1);
 		m_color = COLOR_BLAUFOSC;
 		break;
 	case FIGURA_Z:
-		m_centre.setX(1);
-		m_centre.setY(1);
 		m_color = COLOR_VERMELL;
 		break;
 	case FIGURA_S:
-		m_centre.setX(1);
-		m_centre.setY(1);
 		m_color = COLOR_VERD;
 		break;
 

@@ -38,9 +38,11 @@ bool Joc::mouFigura(int direccio)
 		dirX = MOV_ESQ;
 	}
 
+	bool currentCell, leftCell, rightCell;
+	int taulerXCell, taulerYCell;
+	ColorFigura taulerLeftCell, taulerRightCell;
+
 	bool figureMoved = false, isColliding = false;
-	bool currentCell, leftCell;
-	ColorFigura taulerCell;
 	int i = 0, j = 0;
 
 	if (dirX == MOV_ESQ)
@@ -49,21 +51,32 @@ bool Joc::mouFigura(int direccio)
 		{
 			while (!isColliding && j < m_figuraActual.getMida())
 			{
-				currentCell = m_figuraActual.getMatriuOnIndex(i, j);
-				leftCell = m_figuraActual.getMatriuOnIndex(i, j - 1);
-				taulerCell = m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i, m_tauler.getCursorY() - m_figuraActual.getCentreY() + j - 1);
+				//Celda Actual
+				currentCell = m_figuraActual.getMatriuOnIndex(i, j); 
 
+				//Celda Izquierda
+				leftCell = m_figuraActual.getMatriuOnIndex(i, j - 1); 
+
+				//Componente X celda equivalente tauler
+				taulerXCell = m_tauler.getCursorX() - m_figuraActual.getCentreX() + i;
+
+				//Componente Y celda equivalente tauler
+				taulerYCell = m_tauler.getCursorY() - m_figuraActual.getCentreY() + j;
+
+				// Celda a la izquierda de la celda equivalente en tauler
+				taulerLeftCell = m_tauler.getCellOnIndex(taulerXCell, taulerYCell - 1);
 
 				// Revisamos si las celdas de la primera columna de la matriz figuraActual están ocupadas por 1s
-				// y si en las celdas equivalentes de la matriz tauler hay otras figuras
-				if (j == 0 && currentCell && taulerCell ||
-					(m_tauler.getCursorY() - m_figuraActual.getCentreY() + j == 0 && currentCell)) // o si alguna parte de la figura se está saliendo de la matriz tauler
+				// y si en las celdas a la izquierda equivalentes de la matriz tauler hay otras figuras
+				// o si alguna parte de la figura se está saliendo de la matriz tauler
+				if ((j == 0 && currentCell && taulerLeftCell) || (taulerYCell == 0 && currentCell))
 				{
 					isColliding = true;
 				}
-				else if (currentCell && !(leftCell) && taulerCell) // Confirmamos si hay un 1 en la celda de la matriz figuraActual,
-						// que no tenga otro 1 a su izquierda
-					 // y si la celda equivalente en la matriz tauler está ocupada
+				// Confirmamos si hay un 1 en la celda de la matriz figuraActual,
+				// que no tenga otro 1 a su izquierda
+				// y si la celda a la izquierda equivalente en la matriz tauler está ocupada
+				else if (currentCell && !(leftCell) && taulerLeftCell)
 				{
 					isColliding = true;
 				}
@@ -87,18 +100,32 @@ bool Joc::mouFigura(int direccio)
 		{
 			while (!isColliding && j < m_figuraActual.getMida())
 			{
-				if (j == m_figuraActual.getMida() - 1 &&
-					m_figuraActual.getMatriuOnIndex(i, j) &&
-					m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i,
-											m_tauler.getCursorY() - m_figuraActual.getCentreY() + j + 1) ||
-					(m_tauler.getCursorY() - m_figuraActual.getCentreY() + j == N_COLUMNES - 1 && m_figuraActual.getMatriuOnIndex(i, j)))
+				//Celda Actual
+				currentCell = m_figuraActual.getMatriuOnIndex(i, j);
+				
+				//Celda Derecha
+				rightCell = m_figuraActual.getMatriuOnIndex(i, j + 1);
+
+				//Componente X celda equivalente tauler
+				taulerXCell = m_tauler.getCursorX() - m_figuraActual.getCentreX() + i;
+
+				//Componente Y celda equivalente tauler
+				taulerYCell = m_tauler.getCursorY() - m_figuraActual.getCentreY() + j;
+
+				// Celda a la derecha de la celda equivalente en tauler
+				taulerRightCell = m_tauler.getCellOnIndex(taulerXCell, taulerYCell + 1);
+				
+				// Revisamos si las celdas de la última columna de la matriz figuraActual están ocupadas por 1s
+				// y si en las celdas a la derecha equivalentes de la matriz tauler hay otras figuras
+				// o si alguna parte de la figura se está saliendo de la matriz tauler
+				if ((j == m_figuraActual.getMida() - 1 && currentCell && taulerRightCell) || (taulerYCell == N_COLUMNES - 1 && currentCell))
 				{
 					isColliding = true;
 				}
-				else if (m_figuraActual.getMatriuOnIndex(i, j) &&
-					!(m_figuraActual.getMatriuOnIndex(i, j + 1)) &&
-					m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i,
-											m_tauler.getCursorY() - m_figuraActual.getCentreY() + j + 1))
+				// Confirmamos si hay un 1 en la celda de la matriz figuraActual,
+				// que no tenga otro 1 a su derecha
+				// y si la celda a la derecha equivalente en la matriz tauler está ocupada
+				else if (currentCell && !(rightCell) && taulerRightCell)
 				{
 					isColliding = true;
 				}
@@ -126,22 +153,40 @@ int Joc::baixaFigura()
 	int i = 0, j = 0;
 	int nFilesCompletadas = 0;
 
+	bool currentCell, downCell;
+	int taulerXCell, taulerYCell;
+	ColorFigura taulerDownCell;
+
 	while (!isColliding && i < m_figuraActual.getMida())
 	{
 		while (!isColliding && j < m_figuraActual.getMida())
 		{
-			if (i == m_figuraActual.getMida() - 1 &&
-				m_figuraActual.getMatriuOnIndex(i, j) &&
-				m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i + 1,
-					m_tauler.getCursorY() - m_figuraActual.getCentreY() + j) ||
-				(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i == N_FILES - 1 && m_figuraActual.getMatriuOnIndex(i, j)))
+			//Celda Actual
+			currentCell = m_figuraActual.getMatriuOnIndex(i, j);
+
+			//Celda abajo
+			downCell = m_figuraActual.getMatriuOnIndex(i + 1, j);
+
+			//Componente X celda equivalente tauler
+			taulerXCell = m_tauler.getCursorX() - m_figuraActual.getCentreX() + i;
+
+			//Componente Y celda equivalente tauler
+			taulerYCell = m_tauler.getCursorY() - m_figuraActual.getCentreY() + j;
+
+			// Celda abajo de la celda equivalente en tauler
+			taulerDownCell = m_tauler.getCellOnIndex(taulerXCell + 1, taulerYCell);
+
+			// Revisamos si las celdas de la última fila de la matriz figuraActual están ocupadas por 1s
+			// y si en las celdas debajo equivalentes de la matriz tauler hay otras figuras
+			// o si alguna parte de la figura se está saliendo de la matriz tauler
+			if ((i == m_figuraActual.getMida() - 1 && currentCell && taulerDownCell) || (taulerXCell == N_FILES - 1 && currentCell))
 			{
 				isColliding = true;
 			}
-			else if (m_figuraActual.getMatriuOnIndex(i, j) &&
-				!(m_figuraActual.getMatriuOnIndex(i + 1, j)) &&
-				m_tauler.getCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i + 1,
-					m_tauler.getCursorY() - m_figuraActual.getCentreY() + j))
+			// Confirmamos si hay un 1 en la celda de la matriz figuraActual,
+			// que no tenga otro 1 debajo
+			// y si la celda abajo equivalente en la matriz tauler está ocupada
+			else if (currentCell && !(downCell) && taulerDownCell)
 			{
 				isColliding = true;
 			}
@@ -162,7 +207,7 @@ int Joc::baixaFigura()
 		nFilesCompletadas = eliminaFiles();
 
 
-	return figureMoved;
+	return nFilesCompletadas;
 }
 
 int Joc::eliminaFiles()
@@ -218,7 +263,7 @@ void Joc::calculGir(DireccioGir direccio, Figura& figura)
 		figura.matriuTrasposta();
 		figura.matriuColumnesCanviades();
 
-		// Recalcular el centro de la Figura I
+		// Recalcular el centro de la Figura I y mover el cursor del tauler
 		if (figura.getForma() == FIGURA_I)
 		{
 			switch (figura.getFormaGir())
@@ -256,7 +301,7 @@ void Joc::calculGir(DireccioGir direccio, Figura& figura)
 		figura.matriuColumnesCanviades();
 		figura.matriuTrasposta();
 
-		// Recalcular el centro de la Figura I
+		// Recalcular el centro de la Figura I  y mover el cursor del tauler
 		if (figura.getForma() == FIGURA_I)
 		{
 			switch (figura.getFormaGir())
@@ -301,6 +346,10 @@ bool Joc::giraFigura(DireccioGir direccio)
 	int originalCursorX, originalCursorY;
 	int i = 0, j = 0;
 
+	bool currentCell;
+	int taulerXCell, taulerYCell;
+	ColorFigura taulerCell;
+
 	// Borramos la figura del tablero en su posicion original
 	DWFigura(true); 
 
@@ -317,11 +366,23 @@ bool Joc::giraFigura(DireccioGir direccio)
 	{
 		while (!isColliding && j < copiaFiguraGirada.getMida())
 		{
-			if (m_tauler.getCursorY() - copiaFiguraGirada.getCentreY() + j < 0 ||
-				m_tauler.getCursorY() - copiaFiguraGirada.getCentreY() + j >= N_COLUMNES ||
-				(copiaFiguraGirada.getMatriuOnIndex(i, j) &&
-				 m_tauler.getCellOnIndex(m_tauler.getCursorX() - copiaFiguraGirada.getCentreX() + i,
-				 m_tauler.getCursorY() - copiaFiguraGirada.getCentreY() + j)))
+
+			//Celda Actual
+			currentCell = copiaFiguraGirada.getMatriuOnIndex(i, j);
+
+			//Componente X celda equivalente tauler
+			taulerXCell = m_tauler.getCursorX() - copiaFiguraGirada.getCentreX() + i;
+
+			//Componente Y celda equivalente tauler
+			taulerYCell = m_tauler.getCursorY() - copiaFiguraGirada.getCentreY() + j;
+
+			// Celda equivalente en tauler
+			taulerCell = m_tauler.getCellOnIndex(taulerXCell, taulerYCell);
+
+			// Revisamos si las celdas de la primera o la última columna o de la primera fila de la matriz figuraActual se están saliendo del tauler
+			// o si hay un 1 en la celda de la figuraActual y hay otra figura en la celda equivalente de la matriz tauler
+			if (taulerXCell < 0 || taulerYCell < 0 || taulerYCell >= N_COLUMNES || 
+				(currentCell && taulerCell))
 			{
 				isColliding = true;
 			}
@@ -358,6 +419,7 @@ void Joc::DWFigura(bool DeleteWrite)
 	int minX, minY, maxX, maxY;
 	ColorFigura color;
 
+	// Determinamos si hay que redibujar o eliminar la figuraActual del tauler
 	if (DeleteWrite)
 	{
 		color = COLOR_NEGRE;
@@ -367,6 +429,7 @@ void Joc::DWFigura(bool DeleteWrite)
 		color = m_figuraActual.getColor();
 	}
 
+	// Calculamos los intérvalos de i j del tauler a los cuales pertenece la matriz de figuraActual
 	minX = m_tauler.getCursorX() - m_figuraActual.getCentreX();
 	minY = m_tauler.getCursorY() - m_figuraActual.getCentreY();
 	maxX = minX + m_figuraActual.getMida() - 1;
@@ -378,56 +441,13 @@ void Joc::DWFigura(bool DeleteWrite)
 		{
 			if ((i >= minX && i <= maxX) && (j >= minY && j <= maxY))
 			{
+				// Si la celda actual de la figura tiene un 1, dibujamos el color seleccionado en la celda equivalente del tauler
 				if (m_figuraActual.getMatriuOnIndex(i - minX, j - minY))
 				{
 					m_tauler.setCellOnIndex(i, j, color);
 				}
 			}
 		}
-	}
-}
-
-void Joc::escriuTaulerConsola(bool showCursor)
-{
-	int minX, minY, maxX, maxY;
-
-	minX = m_tauler.getCursorX() - m_figuraActual.getCentreX();
-	minY = m_tauler.getCursorY() - m_figuraActual.getCentreY();
-	maxX = minX + m_figuraActual.getMida() - 1;
-	maxY = minY + m_figuraActual.getMida() - 1;
-
-	for (int i = 0; i < N_FILES; i++)
-	{
-		for (int j = 0; j < N_COLUMNES; j++)
-		{
-			if ((i >= minX && i <= maxX) && (j >= minY && j <= maxY))
-			{
-				if (i == m_tauler.getCursorX() && j == m_tauler.getCursorY())
-				{
-					if (showCursor)
-					{
-						cout << "X ";
-					}
-					else
-					{
-						cout << m_figuraActual.getColor() << " ";
-					}
-				}
-				else if (m_figuraActual.getMatriuOnIndex(i - minX, j - minY))
-				{
-					cout << m_figuraActual.getColor() << " ";
-				}
-				else
-				{
-					cout << m_tauler.getCellOnIndex(i, j) << " ";
-				}
-			}
-			else
-			{
-				cout << m_tauler.getCellOnIndex(i, j) << " ";
-			}
-		}
-		cout << endl;
 	}
 }
 
@@ -442,14 +462,19 @@ void Joc::inicialitza(const string& nomFitxer)
 		int formaFigura, color, x, y, formaGir, i = 0, j = 0;
 		Punt centre;
 
+		// Leemos datos de la figura a inicializar del fitxer
 		fitxer >> formaFigura >> x >> y >> formaGir;
 
+		// Desdibujamos la figura del tauler, en caso de que estuviera dibujada
 		DWFigura(true);
+
+		// Guardamos los datos leídos
 		m_figuraActual.setFormaGir(0);
 		m_figuraActual.inicialitzaMatriuFigura(static_cast<TipusFigura>(formaFigura));
 		m_tauler.setCursorX(x + m_figuraActual.getCentreX() - 1);
 		m_tauler.setCursorY(y + m_figuraActual.getCentreY() - 1);
 
+		// Giramos la figura en caso de que sea necesario
 		if (formaGir != 0)
 		{
 			for (int i = 0; i < formaGir; i++)
@@ -458,8 +483,7 @@ void Joc::inicialitza(const string& nomFitxer)
 			}
 		}
 
-		i = 0, j = 0;
-
+		// Leemos datos del tauler a inicializar del fitxer
 		fitxer >> color;
 		while (!fitxer.eof() && i < N_FILES)
 		{
@@ -504,5 +528,49 @@ void Joc::escriuTauler(const string& nomFitxer)
 		}
 
 		fitxer.close();
+	}
+}
+
+void Joc::escriuTaulerConsola(bool showCursor)
+{
+	int minX, minY, maxX, maxY;
+
+	minX = m_tauler.getCursorX() - m_figuraActual.getCentreX();
+	minY = m_tauler.getCursorY() - m_figuraActual.getCentreY();
+	maxX = minX + m_figuraActual.getMida() - 1;
+	maxY = minY + m_figuraActual.getMida() - 1;
+
+	for (int i = 0; i < N_FILES; i++)
+	{
+		for (int j = 0; j < N_COLUMNES; j++)
+		{
+			if ((i >= minX && i <= maxX) && (j >= minY && j <= maxY))
+			{
+				if (i == m_tauler.getCursorX() && j == m_tauler.getCursorY())
+				{
+					if (showCursor)
+					{
+						cout << "X ";
+					}
+					else
+					{
+						cout << m_figuraActual.getColor() << " ";
+					}
+				}
+				else if (m_figuraActual.getMatriuOnIndex(i - minX, j - minY))
+				{
+					cout << m_figuraActual.getColor() << " ";
+				}
+				else
+				{
+					cout << m_tauler.getCellOnIndex(i, j) << " ";
+				}
+			}
+			else
+			{
+				cout << m_tauler.getCellOnIndex(i, j) << " ";
+			}
+		}
+		cout << endl;
 	}
 }

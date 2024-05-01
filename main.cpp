@@ -34,7 +34,7 @@ void testDebugging(TipusFigura figura, const string& nomFitxer, bool showCursor)
 			
 			case 'A':
 			case 'a':
-				juego.mouFigura(MOV_ESQ);
+				juego.mouFigura(-1);
 			break;
 
 			case 'S':
@@ -44,7 +44,7 @@ void testDebugging(TipusFigura figura, const string& nomFitxer, bool showCursor)
 
 			case 'D':
 			case 'd':
-				juego.mouFigura(MOV_DRE);
+				juego.mouFigura(1);
 			break;
 
 			default:
@@ -62,6 +62,14 @@ void testDebugging(TipusFigura figura, const string& nomFitxer, bool showCursor)
 
 	juego.escriuTauler("resultado.txt");
 }
+
+/*
+int main()
+{
+	testDebugging(FIGURA_T, "pruebaInput1.txt", true);
+	return 0;
+}*/
+
 
 string tipusToString(int tipus)
 {

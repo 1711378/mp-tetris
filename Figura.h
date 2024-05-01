@@ -69,6 +69,7 @@ public:
 	void setForma(TipusFigura forma) { m_forma = forma; };
 	void setColor(ColorFigura color) { m_color = color; };
 	void setFormaGir(int formaGir) { m_formaGir = formaGir; };
+		//Incrementators & decrementators
 	void incCentreX() { m_centre.incX();  };
 	void incCentreY() { m_centre.incY(); };
 	void decCentreX() { m_centre.decX(); };

@@ -26,11 +26,12 @@ typedef enum
 
 class Joc {
 public:
+	// Constructors
 	Joc();
 	Joc(TipusFigura forma);
 
+	// Modifying Methods
 	void inicialitza(const string& nomFitxer);
-	void escriuTauler(const string& nomFitxer);
 	void calculGir(DireccioGir direccio, Figura& figura);
 	bool giraFigura(DireccioGir direccio);
 	bool mouFigura(int direccio);
@@ -38,6 +39,8 @@ public:
 	void DWFigura(bool DeleteWrite); // Delete/Write Figura
 	int eliminaFiles();
 
+	// Consulting Methods
+	void escriuTauler(const string& nomFitxer);
 	void escriuTaulerConsola(bool showCursor);
 private:
 	Figura m_figuraActual;
