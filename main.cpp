@@ -66,7 +66,7 @@ void testDebugging(TipusFigura figura, const string& nomFitxer, bool showCursor)
 /*
 int main()
 {
-	testDebugging(FIGURA_T, "pruebaInput1.txt", true);
+	testDebugging(FIGURA_I, "", true);
 	return 0;
 }*/
 

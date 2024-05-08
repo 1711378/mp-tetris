@@ -416,7 +416,6 @@ bool Joc::giraFigura(DireccioGir direccio)
 
 void Joc::DWFigura(bool DeleteWrite)
 {
-	int minX, minY, maxX, maxY;
 	ColorFigura color;
 
 	// Determinamos si hay que redibujar o eliminar la figuraActual del tauler
@@ -429,26 +428,19 @@ void Joc::DWFigura(bool DeleteWrite)
 		color = m_figuraActual.getColor();
 	}
 
-	// Calculamos los intérvalos de i j del tauler a los cuales pertenece la matriz de figuraActual
-	minX = m_tauler.getCursorX() - m_figuraActual.getCentreX();
-	minY = m_tauler.getCursorY() - m_figuraActual.getCentreY();
-	maxX = minX + m_figuraActual.getMida() - 1;
-	maxY = minY + m_figuraActual.getMida() - 1;
-
-	for (int i = 0; i < N_FILES; i++)
+	for (int i = 0; i < m_figuraActual.getMida(); i++)
 	{
-		for (int j = 0; j < N_COLUMNES; j++)
+		for (int j = 0; j < m_figuraActual.getMida(); j++)
 		{
-			if ((i >= minX && i <= maxX) && (j >= minY && j <= maxY))
+			if (m_figuraActual.getMatriuOnIndex(i, j))
 			{
-				// Si la celda actual de la figura tiene un 1, dibujamos el color seleccionado en la celda equivalente del tauler
-				if (m_figuraActual.getMatriuOnIndex(i - minX, j - minY))
-				{
-					m_tauler.setCellOnIndex(i, j, color);
-				}
+				m_tauler.setCellOnIndex(m_tauler.getCursorX() - m_figuraActual.getCentreX() + i, 
+				m_tauler.getCursorY() - m_figuraActual.getCentreY() + j, 
+				color);
 			}
 		}
 	}
+
 }
 
 void Joc::inicialitza(const string& nomFitxer)
