@@ -34,8 +34,8 @@ void Partida::actualitza(bool testMode, double deltaTime)
     GraphicManager::getInstance()->drawSprite(GRAFIC_FONS, 0, 0, false);
     GraphicManager::getInstance()->drawSprite(GRAFIC_TAULER, POS_X_TAULER, POS_Y_TAULER, false);
 
-    string msg = "Puntuacio: " + to_string(m_score) + "    Nivell: " + to_string(m_level);
-    GraphicManager::getInstance()->drawFont(FONT_WHITE_30, POS_X_TAULER, POS_Y_TAULER - 50, 0.7, msg);
+    string msg = "Nivell: " + to_string(m_level) + "    Puntuacio: " + to_string(m_score);
+    GraphicManager::getInstance()->drawFont(RETRO_FONT_WHITE_30, POS_X_TAULER, POS_Y_TAULER - 50, 0.5, msg);
 
     for (int i = 0; i < N_FILES; i++)
     {
