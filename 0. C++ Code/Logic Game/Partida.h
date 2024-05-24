@@ -13,7 +13,7 @@ class Partida
 public:
     Partida();
     void inicialitza(bool testMode, const string& fitxerInicial, const string& fitxerFigures, const string& fitxerMoviments);
-    void actualitza(bool testMode, double deltaTime);
+    bool actualitza(bool testMode, double deltaTime);
 private:
     Joc m_joc;
     double m_temps;

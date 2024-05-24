@@ -6,6 +6,7 @@ void Tetris::juga(Screen& pantalla, bool testMode)
     Uint64 NOW = SDL_GetPerformanceCounter();
     Uint64 LAST = 0;
     double deltaTime = 0;
+    bool final = false;
 
     m_partida.inicialitza(testMode, "", "", "");
 
@@ -24,12 +25,12 @@ void Tetris::juga(Screen& pantalla, bool testMode)
         pantalla.processEvents();
 
 
-        m_partida.actualitza(testMode, deltaTime);
+        final = m_partida.actualitza(testMode, deltaTime);
 
         // Actualitza la pantalla
         pantalla.update();
 
-    } while (!Keyboard_GetKeyTrg(KEYBOARD_ESCAPE));
+    } while (!Keyboard_GetKeyTrg(KEYBOARD_ESCAPE) && !final);
     // Sortim del bucle si pressionem ESC
 
     //Instruccio necesaria per alliberar els recursos de la llibreria 

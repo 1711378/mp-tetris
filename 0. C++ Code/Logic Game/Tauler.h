@@ -33,6 +33,7 @@ public:
 		//Getters
 	int getCursorX() { return m_cursor.getX(); };
 	int getCursorY() { return m_cursor.getY(); };
+	Punt getCursor() { return m_cursor; };
 
 
 
