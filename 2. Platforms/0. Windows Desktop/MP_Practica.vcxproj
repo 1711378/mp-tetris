@@ -188,6 +188,7 @@
     <ClInclude Include="..\..\0. C++ Code\Logic Game\InfoJoc.h" />
     <ClInclude Include="..\..\0. C++ Code\Logic Game\GraphicManager.h" />
     <ClInclude Include="..\..\0. C++ Code\Logic Game\Punt.h" />
+    <ClInclude Include="..\..\0. C++ Code\Logic Game\Score.h" />
     <ClInclude Include="..\..\0. C++ Code\Logic Game\Tauler.h" />
     <ClInclude Include="..\..\0. C++ Code\Logic Game\Tetris.h" />
   </ItemGroup>

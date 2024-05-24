@@ -123,6 +123,9 @@
     <ClInclude Include="..\..\0. C++ Code\Logic Game\Tetris.h">
       <Filter>Logic Game\Header files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\0. C++ Code\Logic Game\Score.h">
+      <Filter>Logic Game\Header files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Logic Game">
