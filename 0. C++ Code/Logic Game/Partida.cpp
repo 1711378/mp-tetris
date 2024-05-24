@@ -13,6 +13,8 @@ void Partida::inicialitza(bool testMode, const string& fitxerInicial, const stri
 {
     if (testMode)
     {
+        m_joc.inicialitza(fitxerInicial);
+        //actualitza(testMode);
 
     }
     else
@@ -27,10 +29,12 @@ void Partida::inicialitza(bool testMode, const string& fitxerInicial, const stri
     }
 }
 
-void Partida::actualitza(bool testMode, double deltaTime)
+bool Partida::actualitza(bool testMode, double deltaTime)
 {
 	ColorFigura colorTauler;
     int returnColisio = -1;
+    bool final = false;
+
 
     GraphicManager::getInstance()->drawSprite(GRAFIC_FONS, 0, 0, false);
     GraphicManager::getInstance()->drawSprite(GRAFIC_TAULER, POS_X_TAULER, POS_Y_TAULER, false);
@@ -56,8 +60,9 @@ void Partida::actualitza(bool testMode, double deltaTime)
     }
 
     m_temps += deltaTime; 
-    if (m_temps > 0.5) 
+    if (m_temps > (1/sqrt(m_level))) 
     { 
+        cout << (1 / sqrt(m_level)) << endl;
         returnColisio = m_joc.baixaFigura();
         m_temps = 0.0; 
     }
@@ -84,7 +89,7 @@ void Partida::actualitza(bool testMode, double deltaTime)
     {
         if (returnColisio == 0)
         {
-            m_score += 10;
+            m_score += 1000;
         }
         else
         {
@@ -93,5 +98,15 @@ void Partida::actualitza(bool testMode, double deltaTime)
     }
 
     m_level = trunc(sqrt((double)m_score / 1000) + 1);
+    
+    /*
+    if (returnColisio != -1 && m_joc.getCursor().getX() == 1)
+    {
+        final = true;
+    }      
+    */
+
+
+    return final;
 }
 

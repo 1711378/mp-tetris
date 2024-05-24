@@ -39,6 +39,7 @@ public:
 	int hardDrop();
 	void DWFigura(bool DeleteWrite); // Delete/Write Figura
 	int eliminaFiles();
+	Punt getCursor() { return m_tauler.getCursor(); }
 
 	void randFig();
 
