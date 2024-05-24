@@ -36,6 +36,7 @@ typedef enum
     FONT_WHITE_30 = 0,
     FONT_RED_30,
     FONT_GREEN_30,
+    RETRO_FONT_WHITE_30,
     
     FONT_NUM_MAX
 } FONT_NAME;
@@ -71,6 +72,7 @@ private:
     
     Sprite m_aSprites[GRAFIC_NUM_MAX];
     NFont m_oFontWhite_30;
+    NFont m_oRetroFontWhite_30;
     NFont m_oFontRed_30;
     NFont m_oFontGreen_30;
     
