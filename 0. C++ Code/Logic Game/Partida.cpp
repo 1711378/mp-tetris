@@ -30,6 +30,7 @@ void Partida::inicialitza(bool testMode, const string& fitxerInicial, const stri
 void Partida::actualitza(bool testMode, double deltaTime)
 {
 	ColorFigura colorTauler;
+    int returnColisio = -1;
 
     GraphicManager::getInstance()->drawSprite(GRAFIC_FONS, 0, 0, false);
     GraphicManager::getInstance()->drawSprite(GRAFIC_TAULER, POS_X_TAULER, POS_Y_TAULER, false);
@@ -55,9 +56,11 @@ void Partida::actualitza(bool testMode, double deltaTime)
     m_temps += deltaTime; 
     if (m_temps > 0.5) 
     { 
-        m_joc.baixaFigura();
+        returnColisio = m_joc.baixaFigura();
         m_temps = 0.0; 
     }
+
+    
 
     if (Keyboard_GetKeyTrg(KEYBOARD_UP) || Keyboard_GetKeyTrg(KEYBOARD_W))
         m_joc.giraFigura(GIR_HORARI);
@@ -69,9 +72,24 @@ void Partida::actualitza(bool testMode, double deltaTime)
         m_joc.mouFigura(-1);
 
 	if (Keyboard_GetKeyTrg(KEYBOARD_DOWN) || Keyboard_GetKeyTrg(KEYBOARD_S))
-        m_joc.baixaFigura();
+        returnColisio = m_joc.baixaFigura();
 
     if (Keyboard_GetKeyTrg(KEYBOARD_SPACE))
-        m_joc.hardDrop();
+        returnColisio = m_joc.hardDrop();
+    
+
+    if (returnColisio != -1)
+    {
+        if (returnColisio == 0)
+        {
+            m_score += 10;
+        }
+        else
+        {
+            m_score += 100 * returnColisio;
+        }
+    }
+
+    m_level = trunc(sqrt((double)m_score / 1000) + 1);
 }
 
