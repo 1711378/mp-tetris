@@ -42,13 +42,19 @@ int main(int argc, const char* argv[])
     Tetris tetris;
     //Partida game;
 
-    /*Uint64 NOW = SDL_GetPerformanceCounter();
+    Uint64 NOW = SDL_GetPerformanceCounter();
     Uint64 LAST = 0;
-    double deltaTime = 0;*/
+    double deltaTime = 0;
+
     char userOption;
+    bool testMode = false, gameOver = false;
 
     do
     {
+        
+
+        
+
         cout << "MENU PRINCIPAL" << endl;
         cout << "==============" << endl;
         cout << "1. Joc en mode normal" << endl;
@@ -60,10 +66,32 @@ int main(int argc, const char* argv[])
         switch (userOption)
         {
         case '1':
-            tetris.juga(pantalla, false);
+            testMode = false;
+
+            tetris.inicialitza(testMode, "", "", "");
+            do
+            {
+                //Mostrem la finestra grafica
+                pantalla.show();
+
+                LAST = NOW;
+                NOW = SDL_GetPerformanceCounter();
+                deltaTime = (double)((NOW - LAST) / (double)SDL_GetPerformanceFrequency());
+
+                // Captura tots els events de ratolí i teclat de l'ultim cicle
+                pantalla.processEvents();
+
+
+                tetris.juga(pantalla, deltaTime, testMode, gameOver);
+
+                // Actualitza la pantalla
+                pantalla.update();
+
+            } while (!Keyboard_GetKeyTrg(KEYBOARD_ESCAPE) && !gameOver);
+
             break;
         case '2':
-            tetris.juga(pantalla, true);
+            testMode = true;
             break;
         case '3':
             tetris.mostraPuntuacions();
@@ -76,25 +104,9 @@ int main(int argc, const char* argv[])
             break;
         }
 
-        //do
-        //{
-        //    //Mostrem la finestra grafica
-        //    pantalla.show();
+        
 
-        //    LAST = NOW;
-        //    NOW = SDL_GetPerformanceCounter();
-        //    deltaTime = (double)((NOW - LAST) / (double)SDL_GetPerformanceFrequency());
-
-        //    // Captura tots els events de ratolí i teclat de l'ultim cicle
-        //    pantalla.processEvents();
-
-        //    game.actualitza(0, deltaTime);
-
-        //    // Actualitza la pantalla
-        //    pantalla.update();
-
-        //} while (!Keyboard_GetKeyTrg(KEYBOARD_ESCAPE));
-        // Sortim del bucle si pressionem ESC
+         //Sortim del bucle si pressionem ESC
     } while (userOption != '4');
     
 

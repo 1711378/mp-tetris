@@ -39,12 +39,14 @@ public:
 	int hardDrop();
 	void DWFigura(bool DeleteWrite); // Delete/Write Figura
 	int eliminaFiles();
-	Punt getCursor() { return m_tauler.getCursor(); }
 
 	void randFig();
 
 	// Consulting Methods
 	ColorFigura getTauler(int fila, int columna) { return m_tauler.getCellOnIndex(fila, columna); };
+	Punt getCursor() { return m_tauler.getCursor(); };
+	Figura getFigura() { return m_figuraActual; };
+	bool detectCollision(const Figura& figura);
 	void escriuTauler(const string& nomFitxer);
 	void escriuTaulerConsola(bool showCursor);
 private:

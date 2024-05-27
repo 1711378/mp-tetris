@@ -15,10 +15,59 @@ Joc::Joc(TipusFigura forma)
 	m_figuraActual.inicialitzaMatriuFigura(forma);
 }
 
+bool Joc::detectCollision(const Figura& figura)
+{
+	bool isColliding = false, currentCell;
+	int taulerXCell, taulerYCell, i = 0, j = 0;
+	ColorFigura taulerCell;
+
+	// Comprobamos si la figura colisiona o se sale del tablero
+	while (!isColliding && i < figura.getMida())
+	{
+		while (!isColliding && j < figura.getMida())
+		{
+
+			//Celda Actual
+			currentCell = figura.getMatriuOnIndex(i, j);
+
+			//Componente X celda equivalente tauler
+			taulerXCell = m_tauler.getCursorX() - figura.getCentreX() + i;
+
+			//Componente Y celda equivalente tauler
+			taulerYCell = m_tauler.getCursorY() - figura.getCentreY() + j;
+
+			if (((taulerXCell < 0 || taulerYCell < 0 || taulerYCell >= N_COLUMNES || taulerXCell >= N_FILES) && currentCell))
+			{
+				isColliding = true;
+			}
+			else
+			{
+				// Celda equivalente en tauler
+				taulerCell = m_tauler.getCellOnIndex(taulerXCell, taulerYCell);
+
+				// Revisamos si las celdas de las primeras/últimas columnas/filas de la matriz figuraActual se están saliendo del tauler
+				// o si hay un 1 en la celda de la figuraActual y hay otra figura en la celda equivalente de la matriz tauler
+				if (currentCell && taulerCell)
+				{
+					isColliding = true;
+				}
+				else
+				{
+					j++;
+				}
+			}
+		}
+		j = 0;
+		i++;
+	}
+
+	return isColliding;
+}
+
 bool Joc::mouFigura(int direccio)
 {
 	DireccioMov dirX;
-	
+
 	// Convertimos el parámetro direccio al tipo enum DireccioMov
 	if (direccio == 1)
 	{
@@ -29,111 +78,44 @@ bool Joc::mouFigura(int direccio)
 		dirX = MOV_ESQ;
 	}
 
-	bool currentCell, leftCell, rightCell;
-	int taulerXCell, taulerYCell;
-	ColorFigura taulerLeftCell, taulerRightCell;
-
 	bool figureMoved = false, isColliding = false;
-	int i = 0, j = 0;
+
+	DWFigura(true); // Borramos la figura del tablero en su posicion original
 
 	if (dirX == MOV_ESQ)
 	{
-		while (!isColliding && i < m_figuraActual.getMida())
-		{
-			while (!isColliding && j < m_figuraActual.getMida())
-			{
-				//Celda Actual
-				currentCell = m_figuraActual.getMatriuOnIndex(i, j); 
+		m_tauler.moveLeftCursor(); // Movemos la figura
 
-				//Celda Izquierda
-				leftCell = m_figuraActual.getMatriuOnIndex(i, j - 1); 
-
-				//Componente X celda equivalente tauler
-				taulerXCell = m_tauler.getCursorX() - m_figuraActual.getCentreX() + i;
-
-				//Componente Y celda equivalente tauler
-				taulerYCell = m_tauler.getCursorY() - m_figuraActual.getCentreY() + j;
-
-				// Celda a la izquierda de la celda equivalente en tauler
-				taulerLeftCell = m_tauler.getCellOnIndex(taulerXCell, taulerYCell - 1);
-
-				// Revisamos si las celdas de la primera columna de la matriz figuraActual están ocupadas por 1s
-				// y si en las celdas a la izquierda equivalentes de la matriz tauler hay otras figuras
-				// o si alguna parte de la figura se está saliendo de la matriz tauler
-				if ((j == 0 && currentCell && taulerLeftCell) || (taulerYCell == 0 && currentCell))
-				{
-					isColliding = true;
-				}
-				// Confirmamos si hay un 1 en la celda de la matriz figuraActual,
-				// que no tenga otro 1 a su izquierda
-				// y si la celda a la izquierda equivalente en la matriz tauler está ocupada
-				else if (currentCell && !(leftCell) && taulerLeftCell)
-				{
-					isColliding = true;
-				}
-				j++;
-			}
-			j = 0;
-			i++;
-		}
+		isColliding = detectCollision(m_figuraActual);
 
 		if (!isColliding)
 		{
 			figureMoved = true;
-			DWFigura(true); // Borramos la figura del tablero en su posicion original
-			m_tauler.moveLeftCursor(); // Movemos la figura
-			DWFigura(false); // Redibujamos la figura en su nueva posicion
+		}
+		else
+		{
+			// Devolvemos la figura a su posicion original
+			m_tauler.moveRightCursor();
 		}
 	}
 	else if (dirX == MOV_DRE)
 	{
-		while (!isColliding && i < m_figuraActual.getMida())
-		{
-			while (!isColliding && j < m_figuraActual.getMida())
-			{
-				//Celda Actual
-				currentCell = m_figuraActual.getMatriuOnIndex(i, j);
-				
-				//Celda Derecha
-				rightCell = m_figuraActual.getMatriuOnIndex(i, j + 1);
+		m_tauler.moveRightCursor(); // Movemos la figura
 
-				//Componente X celda equivalente tauler
-				taulerXCell = m_tauler.getCursorX() - m_figuraActual.getCentreX() + i;
-
-				//Componente Y celda equivalente tauler
-				taulerYCell = m_tauler.getCursorY() - m_figuraActual.getCentreY() + j;
-
-				// Celda a la derecha de la celda equivalente en tauler
-				taulerRightCell = m_tauler.getCellOnIndex(taulerXCell, taulerYCell + 1);
-				
-				// Revisamos si las celdas de la última columna de la matriz figuraActual están ocupadas por 1s
-				// y si en las celdas a la derecha equivalentes de la matriz tauler hay otras figuras
-				// o si alguna parte de la figura se está saliendo de la matriz tauler
-				if ((j == m_figuraActual.getMida() - 1 && currentCell && taulerRightCell) || (taulerYCell == N_COLUMNES - 1 && currentCell))
-				{
-					isColliding = true;
-				}
-				// Confirmamos si hay un 1 en la celda de la matriz figuraActual,
-				// que no tenga otro 1 a su derecha
-				// y si la celda a la derecha equivalente en la matriz tauler está ocupada
-				else if (currentCell && !(rightCell) && taulerRightCell)
-				{
-					isColliding = true;
-				}
-				j++;
-			}
-			j = 0;
-			i++;
-		}
+		isColliding = detectCollision(m_figuraActual);
 
 		if (!isColliding)
 		{
 			figureMoved = true;
-			DWFigura(true); // Borramos la figura del tablero en su posicion original
-			m_tauler.moveRightCursor(); // Movemos la figura
-			DWFigura(false); // Redibujamos la figura en su nueva posicion
+		}
+		else
+		{
+			// Devolvemos la figura a su posicion original
+			m_tauler.moveLeftCursor();
 		}
 	}
+
+	DWFigura(false); // Redibujamos la figura en la posicion resultante
 
 	return figureMoved;
 }
@@ -141,66 +123,27 @@ bool Joc::mouFigura(int direccio)
 int Joc::baixaFigura()
 {
 	bool figureMoved = false, isColliding = false;
-	int i = 0, j = 0;
 	int nFilesCompletadas = -1;
 
-	bool currentCell, downCell;
-	int taulerXCell, taulerYCell;
-	ColorFigura taulerDownCell;
+	DWFigura(true); // Borramos la figura del tablero en su posicion original
+	m_tauler.moveDownCursor(); // Movemos la figura
 
-	while (!isColliding && i < m_figuraActual.getMida())
-	{
-		while (!isColliding && j < m_figuraActual.getMida())
-		{
-			//Celda Actual
-			currentCell = m_figuraActual.getMatriuOnIndex(i, j);
-
-			//Celda abajo
-			downCell = m_figuraActual.getMatriuOnIndex(i + 1, j);
-
-			//Componente X celda equivalente tauler
-			taulerXCell = m_tauler.getCursorX() - m_figuraActual.getCentreX() + i;
-
-			//Componente Y celda equivalente tauler
-			taulerYCell = m_tauler.getCursorY() - m_figuraActual.getCentreY() + j;
-
-			// Celda abajo de la celda equivalente en tauler
-			taulerDownCell = m_tauler.getCellOnIndex(taulerXCell + 1, taulerYCell);
-
-			// Revisamos si las celdas de la última fila de la matriz figuraActual están ocupadas por 1s
-			// y si en las celdas debajo equivalentes de la matriz tauler hay otras figuras
-			// o si alguna parte de la figura se está saliendo de la matriz tauler
-			if ((i == m_figuraActual.getMida() - 1 && currentCell && taulerDownCell) || (taulerXCell == N_FILES - 1 && currentCell))
-			{
-				isColliding = true;
-			}
-			// Confirmamos si hay un 1 en la celda de la matriz figuraActual,
-			// que no tenga otro 1 debajo
-			// y si la celda abajo equivalente en la matriz tauler está ocupada
-			else if (currentCell && !(downCell) && taulerDownCell)
-			{
-				isColliding = true;
-			}
-			j++;
-		}
-		j = 0;
-		i++;
-	}
+	isColliding = detectCollision(m_figuraActual);
 
 	if (!isColliding)
 	{
 		figureMoved = true;
-		DWFigura(true); // Borramos la figura del tablero en su posicion original
-		m_tauler.moveDownCursor(); // Movemos la figura
-		DWFigura(false); // Redibujamos la figura en su nueva posicion
+		DWFigura(false); // Redibujamos la figura en la posicion resultante
 	}
 	else
 	{
+		m_tauler.moveUpCursor();
+		DWFigura(false); // Redibujamos la figura en la posicion resultante
 		nFilesCompletadas = eliminaFiles();
-		// Generamos una nueva figura aleatoria
-		randFig();
 
-		DWFigura(false);
+		// Generamos una nueva figura aleatoria
+		//randFig();
+		//DWFigura(false);
 	}
 
 	return nFilesCompletadas;
@@ -354,15 +297,11 @@ bool Joc::giraFigura(DireccioGir direccio)
 	int originalCursorX, originalCursorY;
 	int i = 0, j = 0;
 
-	bool currentCell;
-	int taulerXCell, taulerYCell;
-	ColorFigura taulerCell;
-
 	// Borramos la figura del tablero en su posicion original
-	DWFigura(true); 
+	DWFigura(true);
 
 	// Hacemos una shallow copy de la figura actual y guardamos los valores originales del cursor del tablero
-	copiaFiguraGirada = m_figuraActual; 
+	copiaFiguraGirada = m_figuraActual;
 	originalCursorX = m_tauler.getCursorX();
 	originalCursorY = m_tauler.getCursorY();
 
@@ -370,38 +309,7 @@ bool Joc::giraFigura(DireccioGir direccio)
 	calculGir(direccio, copiaFiguraGirada);
 
 	// Comprobamos si la copia girada colisiona con otra figura
-	while (!isColliding && i < copiaFiguraGirada.getMida())
-	{
-		while (!isColliding && j < copiaFiguraGirada.getMida())
-		{
-
-			//Celda Actual
-			currentCell = copiaFiguraGirada.getMatriuOnIndex(i, j);
-
-			//Componente X celda equivalente tauler
-			taulerXCell = m_tauler.getCursorX() - copiaFiguraGirada.getCentreX() + i;
-
-			//Componente Y celda equivalente tauler
-			taulerYCell = m_tauler.getCursorY() - copiaFiguraGirada.getCentreY() + j;
-
-			// Celda equivalente en tauler
-			taulerCell = m_tauler.getCellOnIndex(taulerXCell, taulerYCell);
-
-			// Revisamos si las celdas de la primera o la última columna o de la primera fila de la matriz figuraActual se están saliendo del tauler
-			// o si hay un 1 en la celda de la figuraActual y hay otra figura en la celda equivalente de la matriz tauler
-			if (taulerXCell < 0 || taulerYCell < 0 || taulerYCell >= N_COLUMNES || 
-				(currentCell && taulerCell))
-			{
-				isColliding = true;
-			}
-			else
-			{
-				j++;
-			}
-		}
-		j = 0;
-		i++;
-	}
+	isColliding = detectCollision(copiaFiguraGirada);
 
 	// Si no hay colisiones, igualamos la figura actual a la copia girada
 	if (!isColliding)
@@ -417,7 +325,7 @@ bool Joc::giraFigura(DireccioGir direccio)
 	}
 
 	// Redibujamos la figura, independientemente de los cambios
-	DWFigura(false); 
+	DWFigura(false);
 
 	return figureSpinned;
 }
