@@ -39,10 +39,8 @@ bool Partida::actualitza(bool testMode, double deltaTime)
     GraphicManager::getInstance()->drawSprite(GRAFIC_FONS, 0, 0, false);
     GraphicManager::getInstance()->drawSprite(GRAFIC_TAULER, POS_X_TAULER, POS_Y_TAULER, false);
 
-    string msgLvl = "Nivell: " + to_string(m_level);
-    string msgPunt = "Puntuacio: " + to_string(m_score);
-    GraphicManager::getInstance()->drawFont(RETRO_FONT_WHITE_30, POS_X_TAULER, POS_Y_TAULER - 70, 0.5, msgLvl);
-    GraphicManager::getInstance()->drawFont(RETRO_FONT_WHITE_30, POS_X_TAULER, POS_Y_TAULER - 50, 0.5, msgPunt);
+    string msg = "Nivell: " + to_string(m_level) + "    Puntuacio: " + to_string(m_score);
+    GraphicManager::getInstance()->drawFont(RETRO_FONT_WHITE_30, POS_X_TAULER, POS_Y_TAULER - 50, 0.5, msg);
 
     for (int i = 0; i < N_FILES; i++)
     {
@@ -72,17 +70,22 @@ bool Partida::actualitza(bool testMode, double deltaTime)
     if (Keyboard_GetKeyTrg(KEYBOARD_UP) || Keyboard_GetKeyTrg(KEYBOARD_W))
         m_joc.giraFigura(GIR_HORARI);
 
-	if (Keyboard_GetKeyTrg(KEYBOARD_RIGHT) || Keyboard_GetKeyTrg(KEYBOARD_D))
-		m_joc.mouFigura(1);
+    if (Keyboard_GetKeyTrg(KEYBOARD_DOWN) || Keyboard_GetKeyTrg(KEYBOARD_S))
+        m_joc.giraFigura(GIR_ANTI_HORARI);
 
-	if (Keyboard_GetKeyTrg(KEYBOARD_LEFT) || Keyboard_GetKeyTrg(KEYBOARD_A))
+    if (Keyboard_GetKeyTrg(KEYBOARD_RIGHT) || Keyboard_GetKeyTrg(KEYBOARD_D))
+        m_joc.mouFigura(1);
+
+    if (Keyboard_GetKeyTrg(KEYBOARD_LEFT) || Keyboard_GetKeyTrg(KEYBOARD_A))
         m_joc.mouFigura(-1);
 
-	if (Keyboard_GetKeyTrg(KEYBOARD_DOWN) || Keyboard_GetKeyTrg(KEYBOARD_S))
+
+    if (Keyboard_GetKeyTrg(KEYBOARD_Z) || Keyboard_GetKeyTrg(KEYBOARD_P))
         returnColisio = m_joc.baixaFigura();
 
     if (Keyboard_GetKeyTrg(KEYBOARD_SPACE))
         returnColisio = m_joc.hardDrop();
+
     
 
     if (returnColisio != -1)
