@@ -84,8 +84,8 @@ public:
 	int getFormaGir() const { return m_formaGir; };
 	int getMida() const { return m_mida; };
 	bool getMatriuOnIndex(int fila, int columna) const { return m_matriu[fila][columna]; };
-	int getCentreX() { return m_centre.getX(); };
-	int getCentreY() { return m_centre.getY(); };
+	int getCentreX() const { return m_centre.getX(); };
+	int getCentreY() const { return m_centre.getY(); };
 
 private:
 	TipusFigura m_forma;

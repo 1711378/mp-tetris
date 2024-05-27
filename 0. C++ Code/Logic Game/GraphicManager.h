@@ -28,6 +28,7 @@ typedef enum
     GRAFIC_QUADRAT_BLAUFOSC,
     GRAFIC_QUADRAT_VERMELL,
     GRAFIC_QUADRAT_VERD,
+    GRAFIC_TRANSPARENT_FONS,
     GRAFIC_NUM_MAX
 } IMAGE_NAME;
 
@@ -37,6 +38,7 @@ typedef enum
     FONT_RED_30,
     FONT_GREEN_30,
     RETRO_FONT_WHITE_30,
+    RETRO_FONT_RED_30,
     
     FONT_NUM_MAX
 } FONT_NAME;
@@ -72,9 +74,10 @@ private:
     
     Sprite m_aSprites[GRAFIC_NUM_MAX];
     NFont m_oFontWhite_30;
-    NFont m_oRetroFontWhite_30;
     NFont m_oFontRed_30;
     NFont m_oFontGreen_30;
+    NFont m_oRetroFontWhite_30;
+    NFont m_oRetroFontRed_30;
     
 private:
     string getImagePath (IMAGE_NAME);

@@ -16,6 +16,7 @@ GraphicManager::GraphicManager()
 , m_oFontRed_30(getFontPath(FONT_RED_30).c_str(),30,NFont::Color(255,0,0,255))
 , m_oFontGreen_30(getFontPath(FONT_GREEN_30).c_str(),30,NFont::Color(0,255,0,255))
 , m_oRetroFontWhite_30(getFontPath(RETRO_FONT_WHITE_30).c_str(), 30, NFont::Color(255, 255, 255, 255))
+, m_oRetroFontRed_30(getFontPath(RETRO_FONT_WHITE_30).c_str(), 30, NFont::Color(255, 0, 0, 255))
 {
     for (int i = 0; i < GRAFIC_NUM_MAX; i ++){
         string path = getImagePath((IMAGE_NAME)i);
@@ -57,8 +58,12 @@ NFont::Rectf GraphicManager::drawFont (FONT_NAME name,
         case FONT_WHITE_30:
             return m_oFontWhite_30.draw(posX, posY, NFont::Scale(size), "%s", msg.c_str());
             break;
+        case RETRO_FONT_RED_30:
+            return m_oRetroFontRed_30.draw(posX, posY, NFont::Scale(size), "%s", msg.c_str());
+            break;
         case RETRO_FONT_WHITE_30:
             return m_oRetroFontWhite_30.draw(posX, posY, NFont::Scale(size), "%s", msg.c_str());
+            break;
             
         default:
             cout << "Error: no existeix el identificador de font";
@@ -72,6 +77,9 @@ string GraphicManager::getImagePath(IMAGE_NAME name){
     switch (name) {
     case GRAFIC_FONS:
         path = "data/Graphics/fons.png";
+        break;
+    case GRAFIC_TRANSPARENT_FONS:
+        path = "data/Graphics/transparent_fons.png";
         break;
     case GRAFIC_TAULER:
         path = "data/Graphics/tauler.png";
@@ -116,6 +124,7 @@ string GraphicManager::getFontPath(FONT_NAME name){
             path = "data/Fonts/FreeSans.ttf";
             break;
         case RETRO_FONT_WHITE_30:
+        case RETRO_FONT_RED_30:
             path = "data/Fonts/PressStart2PRegular.ttf";
             break;
             
