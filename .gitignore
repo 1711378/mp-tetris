@@ -40,6 +40,7 @@
 *.ilk
 *.idb
 *.pdb
+*.recipe
 
 # Internal VS folders of the project
 Proyecto_Tetris/
