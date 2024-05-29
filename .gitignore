@@ -43,6 +43,7 @@
 *.recipe
 *.filters
 
+
 # Internal VS folders of the project
 Proyecto_Tetris/
 x64/

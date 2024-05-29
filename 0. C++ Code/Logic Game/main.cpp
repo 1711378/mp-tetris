@@ -48,15 +48,12 @@ int main(int argc, const char* argv[])
 
     char userOption;
     bool testMode = false, gameOver = false;
+    int puntuacio;
 
     do
     {
-        
-
-        
-
-        cout << "MENU PRINCIPAL" << endl;
-        cout << "==============" << endl;
+        cout << "    MENU PRINCIPAL    " << endl;
+        cout << "======================" << endl;
         cout << "1. Joc en mode normal" << endl;
         cout << "2. Joc en mode test" << endl;
         cout << "3. Mostrar puntuacions" << endl;
@@ -68,7 +65,11 @@ int main(int argc, const char* argv[])
         case '1':
             testMode = false;
 
-            tetris.inicialitza(testMode, "", "", "");
+            tetris.inicialitza(testMode, 
+                "./data/Games/partida.txt",
+                "./data/Games/puntuacions.txt", 
+                "./data/Games/figures.txt", 
+                "./data/Games/moviments.txt");
             do
             {
                 //Mostrem la finestra grafica
@@ -82,19 +83,51 @@ int main(int argc, const char* argv[])
                 pantalla.processEvents();
 
 
-                tetris.juga(pantalla, deltaTime, testMode, gameOver);
+                puntuacio = tetris.juga(pantalla, deltaTime, testMode, gameOver, 
+                    "./data/Games/figures.txt", 
+                    "./data/Games/moviments.txt");
 
                 // Actualitza la pantalla
                 pantalla.update();
 
             } while (!Keyboard_GetKeyTrg(KEYBOARD_ESCAPE) && !gameOver);
+            // Actualiza las puntuaciones
+
+            tetris.actualitzaPuntuacions("./data/Games/puntuacions.txt", puntuacio);
 
             break;
         case '2':
             testMode = true;
+
+            tetris.inicialitza(testMode,
+                "./data/Games/partida.txt",
+                "./data/Games/puntuacions.txt",
+                "./data/Games/figures.txt",
+                "./data/Games/moviments.txt");
+            do
+            {
+                //Mostrem la finestra grafica
+                pantalla.show();
+
+                LAST = NOW;
+                NOW = SDL_GetPerformanceCounter();
+                deltaTime = (double)((NOW - LAST) / (double)SDL_GetPerformanceFrequency());
+
+                // Captura tots els events de ratolí i teclat de l'ultim cicle
+                pantalla.processEvents();
+
+
+                puntuacio = tetris.juga(pantalla, deltaTime, testMode, gameOver, 
+                    "./data/Games/figures.txt",
+                    "./data/Games/moviments.txt");
+
+                // Actualitza la pantalla
+                pantalla.update();
+
+            } while (!Keyboard_GetKeyTrg(KEYBOARD_ESCAPE) && !gameOver);
             break;
         case '3':
-            tetris.mostraPuntuacions();
+            tetris.mostraPuntuacions("./data/Games/puntuacions.txt");
             break;
         case '4':
             cout << "Sortint" << endl;

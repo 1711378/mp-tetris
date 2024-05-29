@@ -15,13 +15,26 @@ void Partida::inicialitza(bool testMode, const string& fitxerInicial, const stri
     {
         m_joc.inicialitza(fitxerInicial);
 
+        ifstream fitxer;
+
+        fitxer.open(fitxerMoviments);
+
+        if (fitxer.is_open())
+        {
+            int movCode;
+            fitxer >> movCode;
+
+            while (!fitxer.eof())
+            {
+                fitxer >> movCode;
+            }
+
+            fitxer.close();
+        }
 
     }
     else
     {
-
-
-
         // Generamos una figura aleatoria
         m_joc.randFig();
 
@@ -29,7 +42,7 @@ void Partida::inicialitza(bool testMode, const string& fitxerInicial, const stri
     }
 }
 
-bool Partida::actualitza(bool testMode, double deltaTime)
+bool Partida::actualitza(bool testMode, double deltaTime, const string& fitxerFigures, const string& fitxerMoviments)
 {
     ColorFigura colorTauler;
     int returnColisio = -1;
@@ -48,31 +61,38 @@ bool Partida::actualitza(bool testMode, double deltaTime)
     }
 
 
-
-    if (Keyboard_GetKeyTrg(KEYBOARD_UP) || Keyboard_GetKeyTrg(KEYBOARD_W))
-        m_joc.giraFigura(GIR_HORARI);
-
-    if (Keyboard_GetKeyTrg(KEYBOARD_DOWN) || Keyboard_GetKeyTrg(KEYBOARD_S))
-        m_joc.giraFigura(GIR_HORARI);
-
-    if (Keyboard_GetKeyTrg(KEYBOARD_RIGHT) || Keyboard_GetKeyTrg(KEYBOARD_D))
-        m_joc.mouFigura(1);
-
-    if (Keyboard_GetKeyTrg(KEYBOARD_LEFT) || Keyboard_GetKeyTrg(KEYBOARD_A))
-        m_joc.mouFigura(-1);
-
-    if (Keyboard_GetKeyTrg(KEYBOARD_Z) || Keyboard_GetKeyTrg(KEYBOARD_P))
+    if (!testMode)
     {
-        returnColisio = m_joc.baixaFigura();
-        m_score++;
+        if (Keyboard_GetKeyTrg(KEYBOARD_UP) || Keyboard_GetKeyTrg(KEYBOARD_W))
+            m_joc.giraFigura(GIR_HORARI);
+
+        if (Keyboard_GetKeyTrg(KEYBOARD_DOWN) || Keyboard_GetKeyTrg(KEYBOARD_S))
+            m_joc.giraFigura(GIR_ANTI_HORARI);
+
+        if (Keyboard_GetKeyTrg(KEYBOARD_RIGHT) || Keyboard_GetKeyTrg(KEYBOARD_D))
+            m_joc.mouFigura(1);
+
+        if (Keyboard_GetKeyTrg(KEYBOARD_LEFT) || Keyboard_GetKeyTrg(KEYBOARD_A))
+            m_joc.mouFigura(-1);
+
+        if (Keyboard_GetKeyTrg(KEYBOARD_Z) || Keyboard_GetKeyTrg(KEYBOARD_P))
+        {
+            returnColisio = m_joc.baixaFigura();
+            m_score++;
+        }
+
+
+        if (Keyboard_GetKeyTrg(KEYBOARD_SPACE))
+        {
+            m_score += N_FILES - m_joc.getCursor().getY();
+            returnColisio = m_joc.hardDrop();
+        }
     }
-
-
-    if (Keyboard_GetKeyTrg(KEYBOARD_SPACE))
+    else
     {
-        m_score += N_FILES - m_joc.getCursor().getY();
-        returnColisio = m_joc.hardDrop();
+
     }
+    
 
 
 
@@ -128,10 +148,9 @@ bool Partida::actualitza(bool testMode, double deltaTime)
 
     if (final)
     {
-        // Do stuff
         GraphicManager::getInstance()->drawSprite(GRAFIC_TRANSPARENT_FONS, 0, 0, false);
         string msgFin = "GAME OVER";
-        GraphicManager::getInstance()->drawFont(RETRO_FONT_RED_30, SCREEN_SIZE_X / 8, SCREEN_SIZE_Y / 2, 1.4, msgFin);
+        GraphicManager::getInstance()->drawFont(RETRO_FONT_RED_30, SCREEN_SIZE_X / 8.0, SCREEN_SIZE_Y / 2.0, 1.4, msgFin);
     }
 
 
