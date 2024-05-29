@@ -1,5 +1,0 @@
-﻿  Partida.cpp
-C:\Users\Samuel Outeda\Documents\UAB\Materias\1er Curso\Proyecto Tetris Final\0. C++ Code\Logic Game\Partida.cpp(38,93): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Samuel Outeda\Documents\UAB\Materias\1er Curso\Proyecto Tetris Final\0. C++ Code\Logic Game\Partida.cpp(49,60): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Samuel Outeda\Documents\UAB\Materias\1er Curso\Proyecto Tetris Final\0. C++ Code\Logic Game\Partida.cpp(49,19): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  MP_Practica.vcxproj -> C:\Users\Samuel Outeda\Documents\UAB\Materias\1er Curso\Proyecto Tetris Final\2. Platforms\0. Windows Desktop\Program\MP_Practica.exe

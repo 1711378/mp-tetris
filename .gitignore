@@ -34,9 +34,19 @@
 # .vs folder
 .vs/
 
+# Internal files of the project
+*.log
+*.tlog
+*.ilk
+*.idb
+*.pdb
+*.recipe
+*.filters
+
 # Internal VS folders of the project
 Proyecto_Tetris/
 x64/
 
 # .txt saved game files
 *.txt
+
