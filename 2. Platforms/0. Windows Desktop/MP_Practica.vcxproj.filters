@@ -55,6 +55,9 @@
     <ClCompile Include="..\..\0. C++ Code\Logic Game\Tetris.cpp">
       <Filter>Logic Game\Source files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\0. C++ Code\Logic Game\Score.cpp">
+      <Filter>Logic Game\Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\0. C++ Code\Graphic Lib\debug.h">

@@ -20,6 +20,8 @@ public:
 	// Setters
 	void setPoints(int points) { m_points = points; };
 	void setUser(string user) { m_user = user; };
+
+	bool operator>(const Score& s) const;
 	
 private:
 	int m_points;
