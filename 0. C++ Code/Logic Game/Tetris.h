@@ -12,15 +12,22 @@
 class Tetris
 {
 public:
-	void inicialitza(bool testMode, const string& fitxerInicial, const string& fitxerPuntuacions, const string& fitxerFigures, const string& fitxerMoviments)
+	void inicialitza(bool testMode, 
+		const string& fitxerInicial, 
+		const string& fitxerPuntuacions, 
+		const string& fitxerFigures, 
+		const string& fitxerMoviments)
 	{
 		m_partida.inicialitza(testMode, fitxerInicial, fitxerFigures, fitxerMoviments);
 		inicialitzaPuntuacions(fitxerPuntuacions);
 	}
-	int juga(Screen& pantalla, double deltaTime, bool testMode, bool& gameOver, const string& fitxerFigures, const string& fitxerMoviments);
+	int juga(Screen& pantalla, double deltaTime, bool testMode, bool& gameOver, 
+		const string& fitxerFigures, 
+		const string& fitxerMoviments);
 	void mostraPuntuacions(const string& nomFitxer);
 	void actualitzaPuntuacions(const string& nomFitxer, int punts);
 	void inicialitzaPuntuacions(const string& nomFitxer);
+	void vaciaListPuntuacions();
 private:
 	static const int LIST_SIZE = 10;
 	std::list<Score> m_listPuntuacions;

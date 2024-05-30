@@ -47,7 +47,7 @@ int main(int argc, const char* argv[])
     double deltaTime = 0;
 
     char userOption;
-    bool testMode = false, gameOver = false;
+    bool testMode = false, gameOver = false, fin = false;
     int puntuacio;
 
     do
@@ -64,6 +64,9 @@ int main(int argc, const char* argv[])
         {
         case '1':
             testMode = false;
+            gameOver = false;
+            fin = false;
+            puntuacio = 0;
 
             tetris.inicialitza(testMode, 
                 "./data/Games/partida.txt",
@@ -82,19 +85,36 @@ int main(int argc, const char* argv[])
                 // Captura tots els events de ratolí i teclat de l'ultim cicle
                 pantalla.processEvents();
 
+                if (!fin)
+                {
+                    puntuacio = tetris.juga(pantalla, deltaTime, testMode, fin,
+                        "./data/Games/figures.txt",
+                        "./data/Games/moviments.txt");
 
-                puntuacio = tetris.juga(pantalla, deltaTime, testMode, gameOver, 
-                    "./data/Games/figures.txt", 
-                    "./data/Games/moviments.txt");
-
-                // Actualitza la pantalla
-                pantalla.update();
-
+                    // Actualitza la pantalla
+                    pantalla.update();
+                }
+                else
+                {
+                    if (Keyboard_GetKeyTrg(KEYBOARD_ESCAPE))
+                    {
+                        fin = false;
+                        gameOver = true;
+                        pantalla.close();
+                    }
+                }
+                //Sortim del bucle si pressionem ESC
             } while (!Keyboard_GetKeyTrg(KEYBOARD_ESCAPE) && !gameOver);
+
+            if (!fin)
+            {
+                pantalla.close();
+            }
+
             // Actualiza las puntuaciones
-
             tetris.actualitzaPuntuacions("./data/Games/puntuacions.txt", puntuacio);
-
+            tetris.vaciaListPuntuacions();
+            
             break;
         case '2':
             testMode = true;
@@ -124,7 +144,10 @@ int main(int argc, const char* argv[])
                 // Actualitza la pantalla
                 pantalla.update();
 
-            } while (!Keyboard_GetKeyTrg(KEYBOARD_ESCAPE) && !gameOver);
+            } while (!gameOver);
+
+            gameOver = false;
+
             break;
         case '3':
             tetris.mostraPuntuacions("./data/Games/puntuacions.txt");
@@ -139,7 +162,7 @@ int main(int argc, const char* argv[])
 
         
 
-         //Sortim del bucle si pressionem ESC
+         
     } while (userOption != '4');
     
 

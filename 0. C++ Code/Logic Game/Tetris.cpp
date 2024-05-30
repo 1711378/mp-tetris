@@ -40,7 +40,7 @@ void Tetris::actualitzaPuntuacions(const string& nomFitxer, int punts)
     string user;
 
     if (m_listPuntuacions.size() < LIST_SIZE || 
-        punts > m_listPuntuacions.back().getPoints())
+        punts > m_listPuntuacions.front().getPoints())
     {
         cout << "Ingrese su usuario: " << endl;
         cin >> user;
@@ -49,9 +49,9 @@ void Tetris::actualitzaPuntuacions(const string& nomFitxer, int punts)
 
         if (!(m_listPuntuacions.size() < LIST_SIZE))
         {
-            m_listPuntuacions.pop_back();
+            m_listPuntuacions.pop_front();
         }
-        m_listPuntuacions.push_back(newScore);
+        m_listPuntuacions.push_front(newScore);
         m_listPuntuacions.sort(std::greater<Score>());
 
         ofstream fitxer;
@@ -100,4 +100,9 @@ void Tetris::inicialitzaPuntuacions(const string& nomFitxer)
 
         fitxer.close();
     }
+}
+
+void Tetris::vaciaListPuntuacions()
+{
+    m_listPuntuacions.erase(m_listPuntuacions.begin(), m_listPuntuacions.end());
 }

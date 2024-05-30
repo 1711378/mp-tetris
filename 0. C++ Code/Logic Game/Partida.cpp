@@ -1,6 +1,7 @@
 #include "Partida.h"
 #include "InfoJoc.h"
 #include "GraphicManager.h"
+#include <windows.h>
 
 Partida::Partida()
 {
@@ -15,28 +16,50 @@ void Partida::inicialitza(bool testMode, const string& fitxerInicial, const stri
     {
         m_joc.inicialitza(fitxerInicial);
 
+        int array[MAX_VALORS_NODE] = {};
         ifstream fitxer;
 
+        // Leemos los movimientos del archivo y los guardamos en la cola
         fitxer.open(fitxerMoviments);
 
         if (fitxer.is_open())
         {
-            int movCode;
-            fitxer >> movCode;
+            fitxer >> array[0];
 
             while (!fitxer.eof())
             {
-                fitxer >> movCode;
+                movsTest.afegeix(array, 1);
+                fitxer >> array[0];
             }
 
             fitxer.close();
         }
 
+        // Leemos las figuras del archivo y las guardamos en la cola
+        fitxer.open(fitxerFigures);
+
+        if (fitxer.is_open())
+        {
+
+            while (!fitxer.eof())
+            {
+                for (int i = 0; i < MAX_VALORS_NODE; i++)
+                    fitxer >> array[i];
+
+                figurasTest.afegeix(array, MAX_VALORS_NODE);
+            }
+
+            fitxer.close();
+        }
     }
     else
     {
+        m_score = 0;
+        m_level = 1;
+        m_temps = 0;
+        m_joc.vaciarTauler();
         // Generamos una figura aleatoria
-        m_joc.randFig();
+        m_joc.generarFig(randomNumber(1, NUM_DE_FIGURES), POS_INICIAL_X, POS_INICIAL_Y, 0);
 
         m_joc.DWFigura(false);
     }
@@ -49,13 +72,14 @@ bool Partida::actualitza(bool testMode, double deltaTime, const string& fitxerFi
     bool final = false;
     double speed;
 
+    srand(time(NULL));
 
     m_temps += deltaTime;
     speed = (3.0 / (m_level + 2));
     //if (m_temps > (1/sqrt(m_level))) 
-    if (m_temps > speed)
+    if (m_temps > speed && !testMode)
     {
-        cout << "Velocidad: " << speed << endl;
+        //cout << "Velocidad: " << speed << endl;
         returnColisio = m_joc.baixaFigura();
         m_temps = 0.0;
     }
@@ -90,11 +114,41 @@ bool Partida::actualitza(bool testMode, double deltaTime, const string& fitxerFi
     }
     else
     {
+        TipusTecla currentMov = NO_TECLA;
 
+        currentMov = static_cast<TipusTecla>(movsTest.getPrimer()->getValor(0));
+        movsTest.treu();
+
+        switch (currentMov)
+        {
+        case TECLA_ESQUERRA:
+            m_joc.mouFigura(-1);
+            break;
+        case TECLA_DRETA:
+            m_joc.mouFigura(1);
+            break;
+        case TECLA_AMUNT:
+            m_joc.giraFigura(GIR_HORARI);
+            break;
+        case TECLA_ABAIX:
+            m_joc.giraFigura(GIR_ANTI_HORARI);
+            break;
+        case TECLA_ESPAI:
+            m_score += N_FILES - m_joc.getCursor().getY();
+            returnColisio = m_joc.hardDrop();
+            break;
+        case TECLA_ESCAPE:
+            final = true;
+            break;
+        default:
+            break;
+        }
+
+        Sleep(1000);
     }
     
 
-
+    
 
     if (returnColisio != -1)
     {
@@ -108,7 +162,38 @@ bool Partida::actualitza(bool testMode, double deltaTime, const string& fitxerFi
         }
         m_score += m_level * 10;
 
-        m_joc.randFig();
+        if (!testMode)
+        {
+            m_joc.generarFig(randomNumber(1, NUM_DE_FIGURES), POS_INICIAL_X, POS_INICIAL_Y, 0);
+        }
+        else
+        {
+            int fig, posCol, posFil, gir;
+
+            fig = figurasTest.getPrimer()->getValor(0);
+            posFil = figurasTest.getPrimer()->getValor(1);
+            posCol = figurasTest.getPrimer()->getValor(2);
+            
+            gir = figurasTest.getPrimer()->getValor(3);
+
+            m_joc.generarFig(fig, posFil, posCol, gir);
+            figurasTest.treu();
+
+            m_joc.setCursor(posFil + m_joc.getCentre().getX() - 1, 
+                            posCol + m_joc.getCentre().getY() - 1);
+
+            // Giramos la figura en caso de que sea necesario
+            if (gir != 0)
+            {
+                Figura copiaFigura = m_joc.getFigura();
+                for (int i = 0; i < gir; i++)
+                {
+                    m_joc.calculGir(GIR_HORARI, copiaFigura);
+                }
+
+                m_joc.setFigura(copiaFigura);
+            }
+        }
 
         final = m_joc.detectCollision(m_joc.getFigura());
 
@@ -121,7 +206,6 @@ bool Partida::actualitza(bool testMode, double deltaTime, const string& fitxerFi
     {
         m_level++;
     }
-
 
     GraphicManager::getInstance()->drawSprite(GRAFIC_FONS, 0, 0, false);
     GraphicManager::getInstance()->drawSprite(GRAFIC_TAULER, POS_X_TAULER, POS_Y_TAULER, false);
@@ -146,13 +230,12 @@ bool Partida::actualitza(bool testMode, double deltaTime, const string& fitxerFi
         }
     }
 
-    if (final)
+    if (final && !testMode)
     {
         GraphicManager::getInstance()->drawSprite(GRAFIC_TRANSPARENT_FONS, 0, 0, false);
         string msgFin = "GAME OVER";
         GraphicManager::getInstance()->drawFont(RETRO_FONT_RED_30, SCREEN_SIZE_X / 8.0, SCREEN_SIZE_Y / 2.0, 1.4, msgFin);
     }
-
 
     return final;
 }

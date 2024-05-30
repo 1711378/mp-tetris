@@ -487,19 +487,20 @@ int randomNumber(int numMin, int numMax)
 {
 	int numAleatori;
 
-	srand(time(NULL));
+	//srand(time(NULL));
 
 	numAleatori = numMin + (rand() % (numMax - numMin + 1));
 
 	return numAleatori;
 }
 
-void Joc::randFig()
+void Joc::generarFig(int tipusFigura, int posFil, int posCol, int gir)
 {
-	TipusFigura num = static_cast<TipusFigura>(randomNumber(1, NUM_DE_FIGURES));
+	TipusFigura numFig = static_cast<TipusFigura>(tipusFigura);
+	//cout << endl << "Dentro de randFig()" << endl;
+	cout << "Figura generada: " << numFig << endl;
+	m_figuraActual.inicialitzaMatriuFigura(numFig);
 
-	m_figuraActual.inicialitzaMatriuFigura(num);
-
-	m_tauler.setCursorX(POS_INICIAL_X);
-	m_tauler.setCursorY(POS_INICIAL_Y);
+	m_tauler.setCursorX(posFil);
+	m_tauler.setCursorY(posCol);
 }

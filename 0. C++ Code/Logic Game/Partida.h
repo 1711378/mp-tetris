@@ -5,6 +5,7 @@
 #include <string>
 #include "InfoJoc.h"
 #include "Joc.h"
+#include "Cua.h"
 
 using namespace std;
 
@@ -17,6 +18,8 @@ public:
 
     int getScore() const { return m_score; };
 private:
+    Cua figurasTest;
+    Cua movsTest;
     Joc m_joc;
     double m_temps;
     int m_score;

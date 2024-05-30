@@ -10,6 +10,8 @@
 
 using namespace std;
 
+int randomNumber(int numMin, int numMax);
+
 typedef enum
 {
 	NO_DIR = 0,
@@ -39,12 +41,16 @@ public:
 	int hardDrop();
 	void DWFigura(bool DeleteWrite); // Delete/Write Figura
 	int eliminaFiles();
+	void setCursor(int x, int y) { m_tauler.setCursorX(x), m_tauler.setCursorY(y); };
+	void setFigura(Figura& fig) { m_figuraActual = fig; };
 
-	void randFig();
+	void generarFig(int tipusFigura, int posFil, int posCol, int gir);
+	void vaciarTauler() { m_tauler.vaciarTauler(); }
 
 	// Consulting Methods
 	ColorFigura getTauler(int fila, int columna) { return m_tauler.getCellOnIndex(fila, columna); };
 	Punt getCursor() { return m_tauler.getCursor(); };
+	Punt getCentre() { return m_figuraActual.getCentre(); };
 	Figura getFigura() { return m_figuraActual; };
 	bool detectCollision(const Figura& figura);
 	void escriuTauler(const string& nomFitxer);

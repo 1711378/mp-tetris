@@ -19,6 +19,7 @@ public:
 	Tauler(ColorFigura color, int cursorX, int cursorY);
 
 	// Modifying Methods
+	void vaciarTauler();
 		//Setters
 	void setCursorX(int x) { m_cursor.setX(x); };
 	void setCursorY(int y) { m_cursor.setY(y); };
@@ -29,6 +30,7 @@ public:
 	void moveDownCursor() { m_cursor.incX(); };
 	void moveRightCursor() { m_cursor.incY(); };
 	void moveLeftCursor() { m_cursor.decY(); };
+
 	// Consulting Methods
 		//Getters
 	int getCursorX() { return m_cursor.getX(); };

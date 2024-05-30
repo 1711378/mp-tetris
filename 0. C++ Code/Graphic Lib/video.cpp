@@ -52,6 +52,13 @@ void Screen::show()
   SDL_ShowWindow(g_Video.window) ;
 }
 
+void Screen::close() 
+{ 
+    SDL_HideWindow(g_Video.window);
+    //SDL_DestroyWindow(g_Video.window);
+    //ScreenStatus.exit = true; 
+};
+
 void Screen::processEvents()
 {
   // Borramos el buffer de vídeo antes de hacer la espera porque así aprovechamos mejor

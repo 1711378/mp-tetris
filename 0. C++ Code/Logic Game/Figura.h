@@ -86,6 +86,7 @@ public:
 	bool getMatriuOnIndex(int fila, int columna) const { return m_matriu[fila][columna]; };
 	int getCentreX() const { return m_centre.getX(); };
 	int getCentreY() const { return m_centre.getY(); };
+	Punt getCentre() { return m_centre; };
 
 private:
 	TipusFigura m_forma;

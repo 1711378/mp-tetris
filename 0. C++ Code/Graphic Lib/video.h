@@ -21,6 +21,7 @@ public:
   Screen();
   ~Screen();
 
+  void close();
   void show();
   void processEvents();
   void update();
