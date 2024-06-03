@@ -29,6 +29,10 @@
 #include "./Tetris.h"
 #include "./InfoJoc.h"
 
+// Librerias de la musica
+#include <Mmsystem.h>
+#include <mciapi.h>
+#pragma comment(lib, "Winmm.lib")
 
 int main(int argc, const char* argv[])
 {
@@ -40,7 +44,6 @@ int main(int argc, const char* argv[])
     Screen pantalla(SCREEN_SIZE_X, SCREEN_SIZE_Y);
 
     Tetris tetris;
-    //Partida game;
 
     Uint64 NOW = SDL_GetPerformanceCounter();
     Uint64 LAST = 0;
@@ -50,8 +53,17 @@ int main(int argc, const char* argv[])
     bool testMode = false, gameOver = false, fin = false;
     int puntuacio;
 
+    string userName, normalString = "open \"./data/Music/theme_" + to_string(randomNumber(1, 15)) + ".mp3\" type mpegvideo alias mp3";
+    LPCSTR song = normalString.c_str();
+
+    mciSendString(song, NULL, 0, NULL);
+
     do
     {
+        // Reinicializacion de variables
+        gameOver = false;
+
+        // Menu de la consola
         cout << "    MENU PRINCIPAL    " << endl;
         cout << "======================" << endl;
         cout << "1. Joc en mode normal" << endl;
@@ -64,15 +76,35 @@ int main(int argc, const char* argv[])
         {
         case '1':
             testMode = false;
-            gameOver = false;
             fin = false;
             puntuacio = 0;
+            break;
+        case '2':
+            testMode = true;
+            break;
+        case '3':
+            tetris.mostraPuntuacions("./data/Games/puntuacions.txt");
+            break;
+        case '4':
+            cout << "Sortint" << endl;
+            break;
+        default:
+            cout << "Error. Opcio invalida." << endl;
+            break;
+        }
 
-            tetris.inicialitza(testMode, 
+        if (userOption != '3' && userOption != '4')
+        {
+            tetris.inicialitza(testMode,
                 "./data/Games/partida.txt",
-                "./data/Games/puntuacions.txt", 
-                "./data/Games/figures.txt", 
+                "./data/Games/puntuacions.txt",
+                "./data/Games/figures.txt",
                 "./data/Games/moviments.txt");
+
+            // Empezamos a reproducir la musica
+            mciSendString("play mp3 repeat", NULL, 0, NULL);
+
+            // Bucle principal del juego
             do
             {
                 //Mostrem la finestra grafica
@@ -101,6 +133,7 @@ int main(int argc, const char* argv[])
                         fin = false;
                         gameOver = true;
                         pantalla.close();
+                        mciSendString("stop mp3", NULL, 0, NULL);
                     }
                 }
                 //Sortim del bucle si pressionem ESC
@@ -109,60 +142,19 @@ int main(int argc, const char* argv[])
             if (!fin)
             {
                 pantalla.close();
+                mciSendString("stop mp3", NULL, 0, NULL);
             }
 
-            // Actualiza las puntuaciones
-            tetris.actualitzaPuntuacions("./data/Games/puntuacions.txt", puntuacio);
-            tetris.vaciaListPuntuacions();
-            
-            break;
-        case '2':
-            testMode = true;
-
-            tetris.inicialitza(testMode,
-                "./data/Games/partida.txt",
-                "./data/Games/puntuacions.txt",
-                "./data/Games/figures.txt",
-                "./data/Games/moviments.txt");
-            do
+            if (!testMode)
             {
-                //Mostrem la finestra grafica
-                pantalla.show();
+                // Actualiza las puntuaciones
+                tetris.actualitzaPuntuacions("./data/Games/puntuacions.txt", puntuacio);
+                tetris.vaciaListPuntuacions();
+            }
 
-                LAST = NOW;
-                NOW = SDL_GetPerformanceCounter();
-                deltaTime = (double)((NOW - LAST) / (double)SDL_GetPerformanceFrequency());
-
-                // Captura tots els events de ratolí i teclat de l'ultim cicle
-                pantalla.processEvents();
-
-
-                puntuacio = tetris.juga(pantalla, deltaTime, testMode, gameOver, 
-                    "./data/Games/figures.txt",
-                    "./data/Games/moviments.txt");
-
-                // Actualitza la pantalla
-                pantalla.update();
-
-            } while (!gameOver);
-
-            gameOver = false;
-
-            break;
-        case '3':
-            tetris.mostraPuntuacions("./data/Games/puntuacions.txt");
-            break;
-        case '4':
-            cout << "Sortint" << endl;
-            break;
-        default:
-            cout << "Error. Opcio invàlida." << endl;
-            break;
+            mciSendString("close mp3", NULL, 0, NULL);
         }
-
         
-
-         
     } while (userOption != '4');
     
 

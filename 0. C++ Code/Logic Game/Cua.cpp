@@ -81,3 +81,11 @@ void Cua::treu()
 
     m_nElements--;
 }
+
+void Cua::clear()
+{
+    while (!empty())
+    {
+        treu();
+    }
+}

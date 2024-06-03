@@ -487,8 +487,6 @@ int randomNumber(int numMin, int numMax)
 {
 	int numAleatori;
 
-	//srand(time(NULL));
-
 	numAleatori = numMin + (rand() % (numMax - numMin + 1));
 
 	return numAleatori;
@@ -498,7 +496,7 @@ void Joc::generarFig(int tipusFigura, int posFil, int posCol, int gir)
 {
 	TipusFigura numFig = static_cast<TipusFigura>(tipusFigura);
 	//cout << endl << "Dentro de randFig()" << endl;
-	cout << "Figura generada: " << numFig << endl;
+	//cout << "Figura generada: " << numFig << endl;
 	m_figuraActual.inicialitzaMatriuFigura(numFig);
 
 	m_tauler.setCursorX(posFil);

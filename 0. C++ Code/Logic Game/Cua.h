@@ -12,6 +12,8 @@ public:
 	bool empty() const;
 	void afegeix(int valor[], int n);
 	void treu();
+	int size() const { return m_nElements; };
+	void clear();
 	Node* getPrimer() const;
 	Node* getUltim() const;
 private:

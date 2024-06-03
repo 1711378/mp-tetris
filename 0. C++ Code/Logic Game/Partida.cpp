@@ -5,13 +5,47 @@
 
 Partida::Partida()
 {
+    srand(time(NULL));
     m_score = 0;
     m_level = 1;
     m_temps = 0;
 }
 
+void Partida::imprimirTauler()
+{
+    ColorFigura colorTauler;
+
+    GraphicManager::getInstance()->drawSprite(GRAFIC_FONS, 0, 0, false);
+    GraphicManager::getInstance()->drawSprite(GRAFIC_TAULER, POS_X_TAULER, POS_Y_TAULER, false);
+
+    string msgLvl = "Nivell: " + to_string(m_level);
+    string msgPunt = "Puntuacio: " + to_string(m_score);
+    GraphicManager::getInstance()->drawFont(RETRO_FONT_WHITE_30, POS_X_TAULER, POS_Y_TAULER - 70, 0.5, msgLvl);
+    GraphicManager::getInstance()->drawFont(RETRO_FONT_WHITE_30, POS_X_TAULER, POS_Y_TAULER - 50, 0.5, msgPunt);
+
+    for (int i = 0; i < N_FILES; i++)
+    {
+        for (int j = 0; j < N_COLUMNES; j++)
+        {
+            colorTauler = m_joc.getTauler(i, j);
+
+            if (colorTauler != COLOR_NEGRE)
+            {
+                GraphicManager::getInstance()->drawSprite(static_cast<IMAGE_NAME>(static_cast<int>(colorTauler) + 1),
+                    POS_X_TAULER + ((j + 1) * MIDA_QUADRAT), POS_Y_TAULER + (i * MIDA_QUADRAT), false);
+            }
+
+        }
+    }
+}
+
 void Partida::inicialitza(bool testMode, const string& fitxerInicial, const string& fitxerFigures, const string& fitxerMoviments)
 {
+    m_score = 0;
+    m_level = 1;
+    m_temps = 0;
+    m_joc.vaciarTauler();
+
     if (testMode)
     {
         m_joc.inicialitza(fitxerInicial);
@@ -54,10 +88,6 @@ void Partida::inicialitza(bool testMode, const string& fitxerInicial, const stri
     }
     else
     {
-        m_score = 0;
-        m_level = 1;
-        m_temps = 0;
-        m_joc.vaciarTauler();
         // Generamos una figura aleatoria
         m_joc.generarFig(randomNumber(1, NUM_DE_FIGURES), POS_INICIAL_X, POS_INICIAL_Y, 0);
 
@@ -67,24 +97,23 @@ void Partida::inicialitza(bool testMode, const string& fitxerInicial, const stri
 
 bool Partida::actualitza(bool testMode, double deltaTime, const string& fitxerFigures, const string& fitxerMoviments)
 {
-    ColorFigura colorTauler;
     int returnColisio = -1;
     bool final = false;
     double speed;
 
-    srand(time(NULL));
-
+    // Dibujamos el estado actual del tauler
+    imprimirTauler();
+    
+    // Bajamos la figura automaticamente dependiendo de la velocidad del nivel
     m_temps += deltaTime;
     speed = (3.0 / (m_level + 2));
-    //if (m_temps > (1/sqrt(m_level))) 
     if (m_temps > speed && !testMode)
     {
-        //cout << "Velocidad: " << speed << endl;
         returnColisio = m_joc.baixaFigura();
         m_temps = 0.0;
     }
 
-
+    // Leemos los movimientos de las figuras dependiendo del modo de juego
     if (!testMode)
     {
         if (Keyboard_GetKeyTrg(KEYBOARD_UP) || Keyboard_GetKeyTrg(KEYBOARD_W))
@@ -116,8 +145,11 @@ bool Partida::actualitza(bool testMode, double deltaTime, const string& fitxerFi
     {
         TipusTecla currentMov = NO_TECLA;
 
-        currentMov = static_cast<TipusTecla>(movsTest.getPrimer()->getValor(0));
-        movsTest.treu();
+        if (movsTest.size())
+        {
+            currentMov = static_cast<TipusTecla>(movsTest.getPrimer()->getValor(0));
+            movsTest.treu();
+        }
 
         switch (currentMov)
         {
@@ -134,14 +166,20 @@ bool Partida::actualitza(bool testMode, double deltaTime, const string& fitxerFi
             m_joc.giraFigura(GIR_ANTI_HORARI);
             break;
         case TECLA_ESPAI:
+            returnColisio = m_joc.baixaFigura();
+            m_score++;
+            break;
+        case TECLA_ESCAPE:
             m_score += N_FILES - m_joc.getCursor().getY();
             returnColisio = m_joc.hardDrop();
             break;
-        case TECLA_ESCAPE:
-            final = true;
-            break;
         default:
             break;
+        }
+
+        if (movsTest.empty())
+        {
+            final = true;
         }
 
         Sleep(1000);
@@ -149,12 +187,13 @@ bool Partida::actualitza(bool testMode, double deltaTime, const string& fitxerFi
     
 
     
-
+    // Detectamos si una figura ha colisionado
     if (returnColisio != -1)
     {
+        // Calculamos el aumento de puntuacion
         if (returnColisio == 0)
         {
-            m_score += 5;
+            m_score += 500;
         }
         else
         {
@@ -164,21 +203,25 @@ bool Partida::actualitza(bool testMode, double deltaTime, const string& fitxerFi
 
         if (!testMode)
         {
+            // Generamos una nueva figura aleatoria
             m_joc.generarFig(randomNumber(1, NUM_DE_FIGURES), POS_INICIAL_X, POS_INICIAL_Y, 0);
         }
         else
         {
+            // Leemos la siguiente figura de la cola
             int fig, posCol, posFil, gir;
 
             fig = figurasTest.getPrimer()->getValor(0);
             posFil = figurasTest.getPrimer()->getValor(1);
             posCol = figurasTest.getPrimer()->getValor(2);
-            
             gir = figurasTest.getPrimer()->getValor(3);
 
-            m_joc.generarFig(fig, posFil, posCol, gir);
             figurasTest.treu();
 
+            // Guardando la nueva figura en la matriz de Joc y poniendo el cursor en la posicion
+            // solicitada en la cola
+            m_joc.generarFig(fig, posFil, posCol, gir);
+            
             m_joc.setCursor(posFil + m_joc.getCentre().getX() - 1, 
                             posCol + m_joc.getCentre().getY() - 1);
 
@@ -195,46 +238,35 @@ bool Partida::actualitza(bool testMode, double deltaTime, const string& fitxerFi
             }
         }
 
+        // Comprobamos si la figura colisiona nada mas ser invocada
         final = m_joc.detectCollision(m_joc.getFigura());
 
         m_joc.DWFigura(false);
     }
 
-    //m_level = trunc(sqrt((double)m_score / 1000) + 1);
+    // Calculamos si se han acumulado suficientes puntos para subir de nivel
     if (m_score >= 600 * (m_level * m_level + 2 * m_level + 1)
         && m_level < 25)
     {
         m_level++;
     }
 
-    GraphicManager::getInstance()->drawSprite(GRAFIC_FONS, 0, 0, false);
-    GraphicManager::getInstance()->drawSprite(GRAFIC_TAULER, POS_X_TAULER, POS_Y_TAULER, false);
-
-    string msgLvl = "Nivell: " + to_string(m_level);
-    string msgPunt = "Puntuacio: " + to_string(m_score);
-    GraphicManager::getInstance()->drawFont(RETRO_FONT_WHITE_30, POS_X_TAULER, POS_Y_TAULER - 70, 0.5, msgLvl);
-    GraphicManager::getInstance()->drawFont(RETRO_FONT_WHITE_30, POS_X_TAULER, POS_Y_TAULER - 50, 0.5, msgPunt);
-
-    for (int i = 0; i < N_FILES; i++)
+    if (final)
     {
-        for (int j = 0; j < N_COLUMNES; j++)
-        {
-            colorTauler = m_joc.getTauler(i, j);
+        // Pausamos la musica
+        mciSendString("stop mp3", NULL, 0, NULL);
 
-            if (colorTauler != COLOR_NEGRE)
-            {
-                GraphicManager::getInstance()->drawSprite(static_cast<IMAGE_NAME>(static_cast<int>(colorTauler) + 1),
-                    POS_X_TAULER + ((j + 1) * MIDA_QUADRAT), POS_Y_TAULER + (i * MIDA_QUADRAT), false);
-            }
-
-        }
-    }
-
-    if (final && !testMode)
-    {
+        // Imprimimos mensaje de final de partida
         GraphicManager::getInstance()->drawSprite(GRAFIC_TRANSPARENT_FONS, 0, 0, false);
         string msgFin = "GAME OVER";
         GraphicManager::getInstance()->drawFont(RETRO_FONT_RED_30, SCREEN_SIZE_X / 8.0, SCREEN_SIZE_Y / 2.0, 1.4, msgFin);
+
+        if (testMode)
+        {
+            // Vaciamos las colas de figuras y movimientos
+            figurasTest.clear();
+            movsTest.clear();
+        }
     }
 
     return final;
