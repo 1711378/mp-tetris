@@ -13,6 +13,7 @@ typedef enum
 } TipusTecla;
 
 const int N_TIPUS_FIGURES = 7;
+const int N_CANCONS = 15;
 
 typedef enum
 {

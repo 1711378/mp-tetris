@@ -53,7 +53,8 @@ int main(int argc, const char* argv[])
     bool testMode = false, gameOver = false, fin = false;
     int puntuacio;
 
-    string userName, normalString = "open \"./data/Music/theme_" + to_string(randomNumber(1, 15)) + ".mp3\" type mpegvideo alias mp3";
+    // Abrimos una cancion aleatoria
+    string userName, normalString = "open \"./data/Music/theme_" + to_string(randomNumber(1, N_CANCONS)) + ".mp3\" type mpegvideo alias mp3";
     LPCSTR song = normalString.c_str();
 
     mciSendString(song, NULL, 0, NULL);

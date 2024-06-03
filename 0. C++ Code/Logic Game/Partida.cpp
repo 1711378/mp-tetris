@@ -193,7 +193,7 @@ bool Partida::actualitza(bool testMode, double deltaTime, const string& fitxerFi
         // Calculamos el aumento de puntuacion
         if (returnColisio == 0)
         {
-            m_score += 500;
+            m_score += 50;
         }
         else
         {
